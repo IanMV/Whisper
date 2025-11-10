@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
+import Skull from "./svg/Skull.vue";
+import Logo from './svg/Logo.vue';
 
 const showSearch = ref(false)
 const searchQuery = ref('')
@@ -49,7 +51,7 @@ onBeforeUnmount(() => {
     <div class="header-left">
       <h1>
         <RouterLink to="/">
-          <img src="" alt="Logo" />
+          <Logo/>
         </RouterLink>
       </h1>
 
@@ -79,7 +81,7 @@ onBeforeUnmount(() => {
       </div>
 
       <RouterLink to="/login">
-        <img src="" alt="Login icon" />
+        <Skull/>
       </RouterLink>
     </div>
   </header>
@@ -199,12 +201,5 @@ nav ul li:hover a {
 .search-input.active ~ .mdi-magnify,
 .search-container:has(.search-input.active) .mdi-magnify {
   color: c.$color-red;
-}
-
-
-.header-right img {
-  height: 40px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 </style>
