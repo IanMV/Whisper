@@ -3,6 +3,9 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
 import Skull from "./svg/Skull.vue";
 import Logo from './svg/Logo.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore()
 
 const showSearch = ref(false)
 const searchQuery = ref('')
@@ -51,17 +54,27 @@ onBeforeUnmount(() => {
     <div class="header-left">
       <h1>
         <RouterLink to="/">
-          <Logo/>
+          <Logo />
         </RouterLink>
       </h1>
 
       <nav>
         <ul>
-          <li><RouterLink to="/">Início</RouterLink></li>
-          <li><RouterLink to="/filmes">Filmes</RouterLink></li>
-          <li><RouterLink to="/series">Séries</RouterLink></li>
-          <li><RouterLink to="/detalhes">Destaques</RouterLink></li>
-            <li><RouterLink to="/lista">Minha Lista</RouterLink></li>
+          <li>
+            <RouterLink  to="home">Início</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/filmes">Filmes</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/series">Séries</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/detalhes">Destaques</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/lista">Minha Lista</RouterLink>
+          </li>
         </ul>
       </nav>
     </div>
@@ -70,18 +83,15 @@ onBeforeUnmount(() => {
       <div class="search-container">
         <span class="mdi mdi-magnify" @click.stop="toggleSearch"></span>
 
-        <input
-          ref="searchInput"
-          v-model="searchQuery"
-          type="text"
-          placeholder="Pesquisar..."
-          class="search-input"
-          :class="{ active: showSearch }"
-        />
+        <input ref="searchInput" v-model="searchQuery" type="text" placeholder="Pesquisar..." class="search-input"
+          :class="{ active: showSearch }" />
       </div>
 
-      <RouterLink to="/login">
-        <Skull/>
+      <RouterLink v-if="authStore.logado" to="/perfil">
+        <Skull />
+      </RouterLink>
+      <RouterLink v-else to="/login">
+        <Skull />
       </RouterLink>
     </div>
   </header>
@@ -137,13 +147,13 @@ nav ul li a {
   text-decoration: none;
   font-weight: normal;
   transition: all 0.3s ease;
-  color: c.$color-white;
+  color: c.$color-white-text;
   text-decoration: none;
 }
 
 nav ul li:hover a {
-  text-shadow: black 0px 0px 3px;
-  color: c.$color-red;
+  text-shadow: c.$color-red-hover 0px 0px 3px;
+  color: c.$color-red-hover;
 
 }
 
@@ -167,22 +177,22 @@ nav ul li:hover a {
   position: absolute;
   left: 10px;
   z-index: 2;
-  color: c.$color-white;
+  color: c.$color-white-text;
 }
 
 .search-container .mdi-magnify:hover {
   transform: scale(1.2);
-    color: c.$color-red;
+  color: c.$color-red-hover;
 }
 
 .search-input {
-    border-color: c.$color-red;
+  border-color: c.$color-red-hover;
   border-style: solid;
   padding: 8px 12px 8px 38px;
   font-size: 1rem;
   border-radius: 20px;
   background-color: transparent;
-  color: c.$color-white !important;
+  color: c.$color-white-text !important;
   outline: none;
   width: 0;
   opacity: 0;
@@ -192,14 +202,14 @@ nav ul li:hover a {
 .search-input.active {
   width: 400px;
   opacity: 1;
-  border-color: c.$color-red;
+  border-color: c.$color-red-hover;
   border-style: solid;
   box-shadow: black 0px 0px 8px;
-   color: c.$color-red;
+  color: c.$color-red-hover;
 }
 
-.search-input.active ~ .mdi-magnify,
+.search-input.active~.mdi-magnify,
 .search-container:has(.search-input.active) .mdi-magnify {
-  color: c.$color-red;
+  color: c.$color-red-hover;
 }
 </style>
