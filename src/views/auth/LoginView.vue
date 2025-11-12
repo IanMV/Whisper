@@ -14,12 +14,12 @@ const togglePassword = () => {
 }
 
 const handleLogin = async () => {
-  try {
-    await authStore.login(email.value, password.value)
-  } catch (error) {
-    console.error('Erro ao fazer login:', error)
+  const sucesso = await authStore.login(email.value, password.value)
+  if (!sucesso) {
+    alert('Email ou senha incorretos!')
   }
 }
+
 
 </script>
 
@@ -70,7 +70,7 @@ const handleLogin = async () => {
           </RouterLink>
         </div>
 
-        <button type="submit" @click="authStore.login(email.value, password.value)">Entrar</button>
+        <button type="submit">Entrar</button>
 
         <div class="create-account">
           <p>Não tem uma conta? <RouterLink to="/register" class="create-link">

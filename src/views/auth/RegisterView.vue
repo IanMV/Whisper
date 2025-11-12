@@ -1,7 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import Logo from '@/components/svg/Logo.vue';
+import { RouterLink, useRouter } from 'vue-router'
+import Logo from '@/components/svg/Logo.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const router = useRouter()
 
 const name = ref('')
 const email = ref('')
@@ -9,9 +13,11 @@ const password = ref('')
 const confirmPassword = ref('')
 const showPassword = ref(false)
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const handleRegister = () => {
   errorMessage.value = ''
+  successMessage.value = ''
 
   if (!name.value || !email.value || !password.value || !confirmPassword.value) {
     errorMessage.value = 'Preencha todos os campos.'
@@ -23,11 +29,14 @@ const handleRegister = () => {
     return
   }
 
-  console.log('Nome:', name.value)
-  console.log('Email:', email.value)
-  console.log('Senha:', password.value)
+  const registrado = authStore.register(name.value, email.value, password.value)
 
-  alert('Conta criada com sucesso!')
+  if (!registrado) {
+    errorMessage.value = 'Esse email já está cadastrado.'
+  } else {
+    successMessage.value = 'Conta criada com sucesso!'
+    setTimeout(() => router.push('/login'), 1500)
+  }
 }
 </script>
 
@@ -35,8 +44,8 @@ const handleRegister = () => {
   <section class="login-container">
     <div class="login">
       <Logo class="logo" />
-      <h1>Bem-vindo de Volta</h1>
-      <p>Entre na sua conta para melhorar sua experiência</p>
+      <h1>Criar Conta</h1>
+      <p>Preencha os dados abaixo para se registrar</p>
 
       <form @submit.prevent="handleRegister">
         <div>
@@ -97,6 +106,7 @@ const handleRegister = () => {
         </div>
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
 
         <button type="submit">Criar Conta</button>
 
@@ -161,6 +171,13 @@ p {
   font-size: 0.9rem;
 }
 
+.success-message {
+  color: c.$color-red-detail;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
 form div {
   margin-bottom: 20px;
 }
@@ -199,7 +216,7 @@ label {
 
 .input-group input:focus {
   border-color: c.$color-red-detail;
-    box-shadow: c.$color-red-hover 0px 0px 8px;
+  box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
 .password-fields {

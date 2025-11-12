@@ -1,12 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import Logo from '@/components/svg/Logo.vue';
+import Logo from '@/components/svg/Logo.vue'
+import { useAuthStore } from '@/stores/auth'
 
-const stage = ref('email') 
+const authStore = useAuthStore()
+
+const stage = ref('email')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const showPassword = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 
@@ -15,6 +19,13 @@ const handleEmailSubmit = () => {
     errorMessage.value = 'Por favor, insira seu email.'
     return
   }
+
+  const found = authStore.forgotPassword(email.value)
+  if (!found) {
+    errorMessage.value = 'Email não encontrado em nossa base de dados.'
+    return
+  }
+
   errorMessage.value = ''
   stage.value = 'reset'
 }
@@ -33,9 +44,13 @@ const handlePasswordReset = () => {
     return
   }
 
-  console.log('Senha redefinida para:', password.value)
-  successMessage.value = 'Senha alterada com sucesso!'
-  stage.value = 'success'
+  const updated = authStore.resetPassword(email.value, password.value)
+  if (updated) {
+    successMessage.value = 'Senha alterada com sucesso!'
+    stage.value = 'success'
+  } else {
+    errorMessage.value = 'Erro ao alterar a senha. Tente novamente.'
+  }
 }
 </script>
 
@@ -43,6 +58,7 @@ const handlePasswordReset = () => {
   <section class="login-container">
     <div class="login">
       <Logo class="logo" />
+
       <template v-if="stage === 'email'">
         <h1>Esqueceu sua senha?</h1>
         <p>Insira o e-mail cadastrado para redefinir sua senha</p>
@@ -84,12 +100,17 @@ const handlePasswordReset = () => {
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 id="password"
                 v-model="password"
                 required
                 placeholder="Digite sua nova senha"
               />
+              <span
+                class="mdi"
+                :class="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                @click="showPassword = !showPassword"
+              ></span>
             </div>
           </div>
 
@@ -98,7 +119,7 @@ const handlePasswordReset = () => {
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 id="confirmPassword"
                 v-model="confirmPassword"
                 required
@@ -151,7 +172,7 @@ const handlePasswordReset = () => {
   margin-top: 50px;
   padding: 20px;
   width: 420px;
-  height: 480px;
+  min-height: 480px;
   box-shadow: 0 8px 32px c.$color-black-bottom;
   color: c.$color-white-text;
   text-align: center;
@@ -214,6 +235,20 @@ label {
   font-size: 1.2rem;
 }
 
+.input-group span.mdi-eye-outline,
+.input-group span.mdi-eye-off-outline {
+  right: 10px;
+  left: auto;
+  cursor: pointer;
+  color: c.$color-gray-text;
+  transition: color 0.2s;
+}
+
+.input-group span.mdi-eye-outline:hover,
+.input-group span.mdi-eye-off-outline:hover {
+  color: c.$color-red-detail;
+}
+
 .input-group input {
   width: 100%;
   height: 40px;
@@ -228,8 +263,7 @@ label {
 
 .input-group input:focus {
   border-color: c.$color-red-detail;
-    box-shadow: c.$color-red-hover 0px 0px 8px;
-
+  box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
 button {
@@ -250,7 +284,7 @@ button:hover {
 }
 
 .create-account {
-    text-align: center;
+  text-align: center;
   margin-top: 5px;
 }
 
