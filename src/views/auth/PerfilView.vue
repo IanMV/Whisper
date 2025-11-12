@@ -12,7 +12,6 @@ const showCropper = ref(false)
 const cropperRef = ref(null)
 const zoom = ref(1)
 
-// Upload da imagem
 const handleImageUpload = (e) => {
   const file = e.target.files[0]
   if (!file) return
@@ -24,7 +23,6 @@ const handleImageUpload = (e) => {
   reader.readAsDataURL(file)
 }
 
-// Controle de zoom
 const handleZoom = (val) => {
   zoom.value = parseFloat(val)
   if (cropperRef.value) {
@@ -33,21 +31,18 @@ const handleZoom = (val) => {
   }
 }
 
-// Pré-visualização dinâmica
 const previewImage = computed(() => {
   if (!cropperRef.value) return null
   const result = cropperRef.value.getResult()
   return result?.canvas?.toDataURL() || null
 })
 
-// Salvamento da imagem recortada
 const saveCroppedImage = () => {
   const result = cropperRef.value?.getResult()
   if (result?.canvas) {
     const cropped = result.canvas.toDataURL()
     selectedImage.value = cropped
 
-    // Atualiza no Pinia
     authStore.currentUser.photo = cropped
     if (typeof authStore.updateProfileImage === 'function') {
       authStore.updateProfileImage(authStore.currentUser.id, cropped)
@@ -61,7 +56,6 @@ const saveCroppedImage = () => {
 <template>
   <section class="perfil-container">
     <div class="perfil-box">
-      <!-- Lado esquerdo -->
       <div class="perfil-left">
         <label for="fileInput" class="foto-label">
           <img
