@@ -65,17 +65,17 @@ const handleLogin = async () => {
         </div>
 
         <div class="options">
-          <RouterLink to="/forgot-password" class="forgot-password">
+          <span @click="authStore.authView = 'forgotPassword'" class="forgot-password">
             Esqueci minha senha
-          </RouterLink>
+          </span>
         </div>
 
         <button type="submit">Entrar</button>
 
         <div class="create-account">
-          <p>Não tem uma conta? <RouterLink to="/register" class="create-link">
+          <p>Não tem uma conta? <span @click="authStore.authView = 'register'" class="create-link">
             Criar conta
-          </RouterLink></p>
+          </span></p>
           
         </div>
       </form>
@@ -96,7 +96,7 @@ const handleLogin = async () => {
 .login {
   background: c.$color-gray-bottom;
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 12px;
   margin-left: 12%;
   padding: 20px;
   width: 420px;
@@ -192,6 +192,7 @@ label {
   color: c.$color-red-detail;
   text-decoration: none;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .forgot-password:hover {
@@ -220,6 +221,7 @@ button:hover {
 .create-account {
   text-align: center;
   margin-top: 5px;
+  cursor: pointer;
 }
 
 .create-account p {

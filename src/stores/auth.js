@@ -1,19 +1,46 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import router from '@/router'
 
 export const useAuthStore = defineStore('authStore', () => {
-  const users = ref([
+
+  const savedUsers = JSON.parse(localStorage.getItem('users')) || [
     {
       id: 1,
       name: 'Vini Jr',
       email: 'a@a',
       password: 'a',
+      cpf: '',
+      dataNascimento: '',
+      bio: '',
+      photo: null,
     },
-  ])
+  ]
 
-  const logado = ref(false)
-  const currentUser = ref(null)
+  const savedCurrentUser = JSON.parse(localStorage.getItem('currentUser')) || null
+  const savedLogado = JSON.parse(localStorage.getItem('logado')) || false
+  const savedAuthView = localStorage.getItem('authView') || 'login'
+
+  const users = ref(savedUsers)
+  const currentUser = ref(savedCurrentUser)
+  const logado = ref(savedLogado)
+  const authView = ref(savedAuthView)
+
+  watch(users, (v) => {
+    localStorage.setItem('users', JSON.stringify(v))
+  }, { deep: true })
+
+  watch(currentUser, (v) => {
+    localStorage.setItem('currentUser', JSON.stringify(v))
+  }, { deep: true })
+
+  watch(logado, (v) => {
+    localStorage.setItem('logado', JSON.stringify(v))
+  })
+
+  watch(authView, (v) => {
+    localStorage.setItem('authView', v)
+  })
 
   function login(email, password) {
     const foundUser = users.value.find(
@@ -21,32 +48,29 @@ export const useAuthStore = defineStore('authStore', () => {
     )
 
     if (foundUser) {
-      currentUser.value = users.value.find((u) => u.email === email)
+      currentUser.value = foundUser
       logado.value = true
-      try {
-        router.push('/perfil')
-      } catch (err) {
-        console.warn('Redirecionamento não disponível no contexto atual.')
-      }
       return true
-    } else {
-      logado.value = false
-      currentUser.value = null
-      return false
     }
+
+    logado.value = false
+    currentUser.value = null
+    return false
   }
 
   function register(name, email, password) {
     const existingUser = users.value.find((u) => u.email === email)
-    if (existingUser) {
-      return false
-    }
+    if (existingUser) return false
 
     const newUser = {
       id: users.value.length + 1,
       name,
       email,
       password,
+      cpf: '',
+      dataNascimento: '',
+      bio: '',
+      photo: null,
     }
 
     users.value.push(newUser)
@@ -54,46 +78,53 @@ export const useAuthStore = defineStore('authStore', () => {
   }
 
   function forgotPassword(email) {
-    const foundUser = users.value.find((u) => u.email === email)
-    return !!foundUser
+    return users.value.some((u) => u.email === email)
   }
 
   function resetPassword(email, newPassword) {
     const userIndex = users.value.findIndex((u) => u.email === email)
-
     if (userIndex !== -1) {
       users.value[userIndex].password = newPassword
       return true
     }
-
     return false
   }
 
   function logout() {
     logado.value = false
     currentUser.value = null
+    
     try {
       router.push('/login')
-    } catch (err) {
-      console.warn('Redirecionamento não disponível no contexto atual.')
+    } catch {}
+  }
+
+  function updateUserPhoto(photoBase64) {
+    if (!currentUser.value) return
+
+    currentUser.value.photo = photoBase64
+
+    const index = users.value.findIndex(
+      (u) => u.id === currentUser.value.id
+    )
+
+    if (index !== -1) {
+      users.value[index].photo = photoBase64
     }
   }
 
-  const saveCroppedImage = () => {
-  const result = cropperRef.value?.getResult()
-  if (result?.canvas) {
-    const cropped = result.canvas.toDataURL()
-    selectedImage.value = cropped
+  function updateUserInfo(newData) {
+    if (!currentUser.value) return
 
-    authStore.currentUser.photo = cropped
-    if (typeof authStore.updateProfileImage === 'function') {
-      authStore.updateProfileImage(authStore.currentUser.id, cropped)
+    const index = users.value.findIndex(
+      (u) => u.id === currentUser.value.id
+    )
+
+    if (index !== -1) {
+      users.value[index] = { ...users.value[index], ...newData }
+      currentUser.value = users.value[index]
     }
-
-    showCropper.value = false 
   }
-}
-
 
   return {
     users,
@@ -104,6 +135,8 @@ export const useAuthStore = defineStore('authStore', () => {
     forgotPassword,
     resetPassword,
     logout,
-    saveCroppedImage,
+    updateUserPhoto,
+    updateUserInfo,
+    authView,
   }
 })

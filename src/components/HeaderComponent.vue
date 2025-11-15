@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
       <nav>
         <ul>
           <li>
-            <RouterLink  to="home">Início</RouterLink>
+            <RouterLink  to="/">Início</RouterLink>
           </li>
           <li>
             <RouterLink to="/filmes">Filmes</RouterLink>
@@ -87,10 +87,7 @@ onBeforeUnmount(() => {
           :class="{ active: showSearch }" />
       </div>
 
-      <RouterLink v-if="authStore.logado" to="/perfil">
-        <Skull />
-      </RouterLink>
-      <RouterLink v-else to="/login">
+      <RouterLink to="/auth">
         <Skull />
       </RouterLink>
     </div>

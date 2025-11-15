@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
 import Logo from '@/components/svg/Logo.vue'
 import { useAuthStore } from '@/stores/auth'
 
@@ -83,9 +82,9 @@ const handlePasswordReset = () => {
           <button type="submit">Continuar</button>
 
           <div class="create-account">
-            <RouterLink to="/login" class="create-link">
+            <span @click="authStore.authView = 'login'" class="create-link">
               Voltar ao Login
-            </RouterLink>
+            </span>
           </div>
         </form>
       </template>
@@ -133,9 +132,9 @@ const handlePasswordReset = () => {
           <button type="submit">Salvar Nova Senha</button>
 
           <div class="create-account">
-            <RouterLink to="/login" class="create-link">
+            <span @click="authStore.authView = 'login'" class="create-link">
               Voltar ao Login
-            </RouterLink>
+            </span>
           </div>
         </form>
       </template>
@@ -145,9 +144,9 @@ const handlePasswordReset = () => {
         <p class="success-message">{{ successMessage }}</p>
 
         <div class="create-account">
-          <RouterLink to="/login" class="create-link">
+          <span @click="authStore.authView = 'login'" class="create-link">
             Ir para o Login
-          </RouterLink>
+          </span>
         </div>
       </template>
     </div>
@@ -294,6 +293,7 @@ button:hover {
   font-weight: 500;
   text-decoration: none;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .create-link:hover {

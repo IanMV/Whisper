@@ -35,7 +35,7 @@ const handleRegister = () => {
     errorMessage.value = 'Esse email já está cadastrado.'
   } else {
     successMessage.value = 'Conta criada com sucesso!'
-    setTimeout(() => router.push('/login'), 1500)
+    setTimeout(() => authStore.authView = 'login', 1500)
   }
 }
 </script>
@@ -111,9 +111,9 @@ const handleRegister = () => {
         <button type="submit">Criar Conta</button>
 
         <div class="create-account">
-          <RouterLink to="/login" class="create-link">
+          <span @click="authStore.authView = 'login'" class="create-link">
             Voltar ao Login
-          </RouterLink>
+          </span>
         </div>
       </form>
     </div>
@@ -253,6 +253,7 @@ button:hover {
   font-weight: 500;
   text-decoration: none;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .create-link:hover {
