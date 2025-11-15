@@ -14,7 +14,7 @@ import Logo from "@/../public/logo.svg";
 
 <style scoped lang="scss">
 footer {
-  color: c.$color-white;
+  color: c.$color-white-text;
   text-align: center;
   padding: 20px;
 display: flex;
