@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
 import { Cropper, CircleStencil } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import { useAuthStore } from "@/stores/auth";
@@ -58,7 +59,7 @@ const saveCropped = async () => {
     if (typeof cmp.getResult === "function") {
       try {
         result = cmp.getResult();
-      } catch {}
+      } catch { }
     }
 
     if (!result && cmp?.result) result = cmp.result;
@@ -68,7 +69,7 @@ const saveCropped = async () => {
     if (!canvas && typeof cmp.getCanvas === "function") {
       try {
         canvas = cmp.getCanvas();
-      } catch {}
+      } catch { }
     }
 
     if (!canvas) {
@@ -100,32 +101,16 @@ const saveCropped = async () => {
       <div class="left-card">
         <div class="foto-area">
           <div class="circle">
-            <img
-              :src="selectedImage || '/img/default-avatar.png'"
-              alt="avatar"
-            />
+            <img :src="selectedImage || '/img/default-avatar.png'" alt="avatar" />
           </div>
 
           <label class="upload-label">
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleImageUpload"
-              hidden
-            />
+            <input type="file" accept="image/*" @change="handleImageUpload" hidden />
             Alterar foto
           </label>
         </div>
-        <input
-          type="name"
-          v-model="authStore.currentUser.name"
-          :disabled="!isEditing"
-          class="nome"
-        />
-        <p
-          class="logout"
-          @click="(authStore.logado = false), (authStore.authView = 'login')"
-        >
+        <input type="name" v-model="authStore.currentUser.name" :disabled="!isEditing" class="nome" />
+        <p class="logout" @click="(authStore.logado = false), (authStore.authView = 'login')">
           Sair da Conta
         </p>
       </div>
@@ -151,60 +136,32 @@ const saveCropped = async () => {
 
           <div class="fields">
             <div class="row-two">
-              <input
-                type="text"
-                :value="authStore.currentUser.cpf"
-                @input="authStore.updateCPF($event.target.value)"
-                placeholder="000.000.000-00"
-                :disabled="!isEditing"
-              />
-              <input
-  type="text"
-  placeholder="DD/MM/AAAA"
-  :value="authStore.currentUser.dataNascimento"
-  @input="
-    $event.target.value = $event.target.value.replace(/[^0-9/]/g, '');
-    authStore.updateDataNascimento($event.target.value);
-  "
-  :disabled="!isEditing"
-/>
+              <input type="text" :value="authStore.currentUser.cpf" @input="authStore.updateCPF($event.target.value)"
+                placeholder="000.000.000-00" :disabled="!isEditing" />
+              <input type="date" v-model="authStore.currentUser.dataNascimento" :disabled="!isEditing" />
             </div>
 
-            <input
-              type="email"
-              :value="authStore.currentUser.email"
-              @input="authStore.updateEmail($event.target.value)"
-              placeholder="seuemail@email.com"
-              :disabled="!isEditing"
-            />
+            <input type="email" :value="authStore.currentUser.email" @input="authStore.updateEmail($event.target.value)"
+              placeholder="seuemail@email.com" :disabled="!isEditing" />
 
-            <textarea
-              placeholder="Biografia"
-              v-model="authStore.currentUser.bio"
-              :disabled="!isEditing"
-            ></textarea>
+            <textarea placeholder="Biografia" v-model="authStore.currentUser.bio" :disabled="!isEditing"></textarea>
           </div>
 
           <div class="panel-footer">
-            <button class="btn-outline">
-              <RouterLink to="/destaques">Destaques</RouterLink>
-            </button>
-            <button class="btn-white">
-              <RouterLink to="/minha-lista">Minha Lista</RouterLink>
-            </button>
+            <RouterLink to="/destaques">
+              <button class="btn-outline">Destaques</button>
+            </RouterLink>
+            <RouterLink to="/minha-lista">
+              <button class="btn-white">Minha Lista </button>
+            </RouterLink>
           </div>
         </div>
       </div>
 
       <div v-if="showCropper" class="cropper-modal">
         <div class="cropper-box">
-          <Cropper
-            ref="cropperRef"
-            :src="tempImage"
-            :stencil-component="CircleStencil"
-            :stencil-props="{ aspectRatio: 1 }"
-            class="cropper"
-          />
+          <Cropper ref="cropperRef" :src="tempImage" :stencil-component="CircleStencil"
+            :stencil-props="{ aspectRatio: 1 }" class="cropper" />
 
           <div class="cropper-actions">
             <button class="btn salvar" @click="saveCropped">Salvar</button>
@@ -221,7 +178,6 @@ const saveCropped = async () => {
 <style scoped lang="scss">
 input:disabled,
 textarea:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -382,10 +338,9 @@ input.nome {
 .btn-editar {
   background: c.$color-red-detail;
   color: c.$color-white-text;
-  border: none;
-  font-size: 1.05rem;
   padding: 8px 15px;
   border-radius: 8px;
+  border: none;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -429,7 +384,7 @@ textarea:focus {
 textarea {
   height: 110px;
   resize: none;
-  padding: 10px 0;
+  padding: 10px;
 }
 
 .panel-footer {
@@ -441,12 +396,12 @@ textarea {
 .btn-outline {
   background: transparent;
   border: 1px solid c.$color-white-text;
-  padding: 10px 28px;
+  padding: 15px 150px;
   border-radius: 8px;
   color: c.$color-white-text;
   cursor: pointer;
   transition: 0.3s;
-  width: 48%;
+  width: 100%;
   font-size: 1.2rem;
 }
 
@@ -456,21 +411,15 @@ textarea {
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
-.btn-outline a,
-.btn-white a {
-  color: inherit;
-  text-decoration: none;
-}
-
 .btn-white {
   background: c.$color-red-detail;
   color: c.$color-white-text;
-  padding: 10px 28px;
+  padding: 15px 150px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: 0.3s;
-  width: 48%;
+  width: 100%;
   font-size: 1.2rem;
 }
 

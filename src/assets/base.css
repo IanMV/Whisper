@@ -56,3 +56,8 @@ html{
 body{
     height: 101vh;
 }
+
+main {
+  position: relative;
+  overflow: hidden;
+}

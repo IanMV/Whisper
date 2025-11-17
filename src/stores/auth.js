@@ -11,34 +11,6 @@ function formatCPF(value) {
     .slice(0, 14)
 }
 
-function formatDateBR(value) {
-  if (!value && value !== '') return ''
-
-  let v = String(value).replace(/\D/g, '')
-
-  v = v.slice(0, 8)
-
-  if (v.length >= 3) v = v.replace(/(\d{2})(\d)/, '$1/$2')
-  if (v.length >= 5) v = v.replace(/(\d{2})\/(\d{2})(\d+)/, '$1/$2/$3')
-
-    if (v.length === 10) {
-    const [diaS, mesS, anoS] = v.split('/')
-    const dia = Number(diaS)
-    const mes = Number(mesS)
-    const ano = Number(anoS)
-    const anoAtual = new Date().getFullYear()
-
-    if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return null
-    if (ano < 1900 || ano > anoAtual) return null
-    if (mes < 1 || mes > 12) return null
-
-    const ultimoDia = new Date(ano, mes, 0).getDate()
-    if (dia < 1 || dia > ultimoDia) return null
-  }
-
-  return v
-}
-
 function validateEmail(value) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return regex.test(value)
@@ -168,7 +140,6 @@ export const useAuthStore = defineStore('authStore', () => {
     updateProfileImage,
 
     formatCPF,
-    formatDateBR,
     validateEmail,
   }
 })
