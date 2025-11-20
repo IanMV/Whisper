@@ -22,7 +22,7 @@ const props = defineProps({
       <li v-for="movie in movies">
         <router-link :to="{ name: 'movie', params: { id: movie.id } }">
           <img
-            :src="`https://image.tmdb.org/t/p/w300${movie.poster_path}
+            :src="`htthps://image.tmdb.org/t/p/w300${movie.poster_path}
 `"
             alt=""
           />

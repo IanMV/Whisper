@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 
 import Carousel from "@/components/mid-components/Carousel.vue";
-import Section from "@/components/mid-components/Section.vue";
+import Section from "@/components/mid-components/SectionMovies.vue";
 
 onMounted(() => {
   const url =

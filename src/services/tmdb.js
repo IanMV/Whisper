@@ -34,4 +34,12 @@ export const tmdbApi = {
   searchMovies(query) {
     return tmdbFetch("search/movie", { query });
   },
+
+  searchImage(id) {
+    return tmdbFetch(`movie/${id}/images`);
+  },
+
+  searchVideo(id) {
+    return tmdbFetch(`movie/${id}/videos`);
+  },
 };
