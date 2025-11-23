@@ -17,19 +17,15 @@ onMounted(() => {
     },
   })
     .then((res) => res.json())
-    .then((data) => console.log(data))
     .catch((err) => console.error(err));
 });
 </script>
 
 <template>
   <Carousel />
-  <h1>Home Page</h1>
-  <Section/>
+  <Section title="Terror"/>
 </template>
 
 <style scoped>
-h1 {
-  margin-top: 100px;
-}
+
 </style>
