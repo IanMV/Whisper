@@ -128,7 +128,18 @@ table {
   /*Faz com que o scroll se sobreponha na página */
 }
 
+
 html {
   background-color: #000;
   overflow-x: hidden;
+}
+
+
+body{
+    height: 101vh;
+}
+
+main {
+  position: relative;
+  overflow: hidden;
 }

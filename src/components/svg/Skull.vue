@@ -19,11 +19,11 @@ div:hover {
   transition: all 0.3s ease-in-out;
 
   :deep(svg path) {
-    fill: c.$color-red;
+    fill: c.$color-red-hover;
   }
 
   :deep(svg circle) {
-    stroke: c.$color-red;
+    stroke: c.$color-red-hover;
   }
 }
 </style>
