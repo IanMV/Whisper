@@ -15,6 +15,7 @@ export default defineConfig({
       scss: {
         additionalData: `
           @use "/src/assets/_color.scss" as c;
+           @use "/src/assets/_size.scss" as s;
         `
       }
     }
