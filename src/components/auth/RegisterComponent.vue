@@ -1,11 +1,9 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import Logo from '@/components/svg/Logo.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 const name = ref('')
 const email = ref('')
@@ -14,6 +12,31 @@ const confirmPassword = ref('')
 const showPassword = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+
+const backgroundUrl = ref('')
+const terrorMovies = [346364, 348, 694, 138843, 214]
+const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+let shuffledMovies = []
+let index = 0
+
+const shuffleMovies = () => { shuffledMovies = [...terrorMovies].sort(() => Math.random() - 0.5); index = 0 }
+const loadRandomBackground = async () => {
+  if (index >= shuffledMovies.length) shuffleMovies()
+  const movieId = shuffledMovies[index++]
+  try {
+    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`)
+    const data = await res.json()
+    if (data.backdrop_path) backgroundUrl.value = `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+  } catch (e) { console.error('Erro ao carregar imagem:', e) }
+}
+
+onMounted(() => {
+  shuffleMovies()
+  loadRandomBackground()
+  setInterval(loadRandomBackground, 8000)
+})
+
+const togglePassword = () => showPassword.value = !showPassword.value
 
 const handleRegister = () => {
   errorMessage.value = ''
@@ -30,7 +53,6 @@ const handleRegister = () => {
   }
 
   const registrado = authStore.register(name.value, email.value, password.value)
-
   if (!registrado) {
     errorMessage.value = 'Esse email já está cadastrado.'
   } else {
@@ -41,68 +63,42 @@ const handleRegister = () => {
 </script>
 
 <template>
-  <section class="login-container">
+  <section
+  class="login-container"
+  :style="{
+    background: `linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c), url(${backgroundUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundBlendMode: 'darken'
+  }"
+>
+
     <div class="login">
       <Logo class="logo" />
       <h1>Criar Conta</h1>
       <p>Preencha os dados abaixo para se registrar</p>
 
       <form @submit.prevent="handleRegister">
-        <div>
-          <label for="name">Nome:</label>
-          <div class="input-group">
-            <span class="mdi mdi-account-outline"></span>
-            <input
-              type="text"
-              id="name"
-              v-model="name"
-              required
-              placeholder="Digite seu nome"
-            />
-          </div>
+        <div class="input-group">
+          <span class="mdi mdi-account-outline"></span>
+          <input type="text" v-model="name" placeholder="Nome completo" />
         </div>
 
-        <div>
-          <label for="email">Email:</label>
-          <div class="input-group">
-            <span class="mdi mdi-email-outline"></span>
-            <input
-              type="email"
-              id="email"
-              v-model="email"
-              required
-              placeholder="exemplo@gmail.com"
-            />
-          </div>
+        <div class="input-group">
+          <span class="mdi mdi-email-outline"></span>
+          <input type="email" v-model="email" placeholder="Email" />
         </div>
 
         <div class="password-fields">
-          <div>
-            <label for="password">Senha:</label>
-            <div class="input-group">
-              <span class="mdi mdi-lock-outline"></span>
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                v-model="password"
-                required
-                placeholder="Digite sua senha"
-              />
-            </div>
-          </div>
-          <div>
-            <label for="confirm-password">Confirmar Senha:</label>
-            <div class="input-group">
-              <span class="mdi mdi-lock-outline"></span>
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                id="confirm-password"
-                v-model="confirmPassword"
-                required
-                placeholder="Confirme sua senha"
-              />
-            </div>
-          </div>
+          <div class="input-group">
+          <span class="mdi mdi-lock-outline"></span>
+          <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Senha" />
+        </div>
+
+        <div class="input-group">
+          <span class="mdi mdi-lock-outline"></span>
+          <input :type="showPassword ? 'text' : 'password'" v-model="confirmPassword" placeholder="Confirmar senha" />
+        </div>
         </div>
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -111,9 +107,10 @@ const handleRegister = () => {
         <button type="submit">Criar Conta</button>
 
         <div class="create-account">
-          <span @click="authStore.authView = 'login'" class="create-link">
-            Voltar ao Login
-          </span>
+          <p>
+            Já tem uma conta?
+            <span class="create-link" @click="authStore.authView = 'login'">Voltar</span>
+          </p>
         </div>
       </form>
     </div>
@@ -124,25 +121,25 @@ const handleRegister = () => {
 .login-container {
   height: 100vh;
   width: 100%;
-  background: linear-gradient(to right, c.$color-black-bottom, c.$color-black-bottom 50%, transparent);
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
   display: flex;
   align-items: center;
-  padding: 0;
 }
+
 
 .login {
-  background: c.$color-gray-bottom;
+  background: c.$color-black-blur;
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 12px;
   margin-left: 12%;
-  margin-top: 50px;
   padding: 20px;
   width: 420px;
-  height: 600px;
-  box-shadow: 0 8px 32px c.$color-black-bottom;
+  height: 550px;
   color: c.$color-white-text;
+  margin-top: 20px;
 }
-
 .logo {
   display: block;
   margin: 20px auto 20px;
@@ -153,13 +150,13 @@ h1 {
   text-align: center;
   margin-bottom: 0;
   font-weight: bold;
-  font-size: 2rem;
-  color: c.$color-red-detail;
+  font-size: 2.5rem;
+  color: c.$color-red-hover;
 }
 
 p {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 25px;
   color: c.$color-gray-text;
 }
@@ -172,7 +169,7 @@ p {
 }
 
 .success-message {
-  color: c.$color-red-detail;
+  color: c.$color-red-hover;
   text-align: center;
   margin-bottom: 15px;
   font-size: 0.9rem;
@@ -206,16 +203,16 @@ label {
   width: 100%;
   height: 40px;
   padding: 10px 40px 10px 35px;
-  border-radius: 6px;
+  border-radius: 12px;
   border: 1px solid c.$color-gray-text;
   background-color: transparent;
   color: c.$color-white-text;
   outline: none;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .input-group input:focus {
-  border-color: c.$color-red-detail;
+  border-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
@@ -228,32 +225,35 @@ label {
 button {
   width: 100%;
   padding: 12px;
-  background-color: c.$color-red-detail;
+  background-color: c.$color-red-hover;
   color: c.$color-white-text;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s;
 }
 
 button:hover {
-  background-color: c.$color-red-detail;
+  background-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
+  transform: scale(1.05);
 }
 
 .create-account {
   text-align: center;
+  font-size: 1rem;
 }
 
 .create-link {
   display: inline-block;
-  margin-top: 5px;
-  color: c.$color-red-detail;
-  font-weight: 500;
+  margin-top: 10px;
+  color: c.$color-red-hover;
+  font-weight: bold;
   text-decoration: none;
-  transition: 0.3s;
   cursor: pointer;
+  font-size: 1rem;
+  transition: 0.4s all;
 }
 
 .create-link:hover {
