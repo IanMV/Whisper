@@ -770,15 +770,11 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .similar-track {
   display: flex;
   gap: 14px;
-  overflow-x: auto;
+  overflow-x: hidden  ;
   scroll-behavior: smooth;
   padding-bottom: 10px;
   width: 80%;
 
-}
-
-.similar-track::-webkit-scrollbar {
-  height: 0;
 }
 
 .similar-item {

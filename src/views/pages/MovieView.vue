@@ -22,7 +22,7 @@ const heroTerrorMovies = [346364, 348, 694, 138843, 214, 1197137, 1062722];
 const THEMES = [
   { title: "Terror Popular:", params: "with_genres=27&sort_by=popularity.desc" },
   { title: "Terror Aclamado pela Crítica:", params: "with_genres=27&vote_average.gte=7.8" },
-  { title: "Lançamentos Recentes de Terror:", params: "with_genres=27&sort_by=release_date.desc" },
+  { title: "Futuros Lançamentos:", params: "with_genres=27&sort_by=release_date.desc" },
   { title: "Terror dos anos 70:", params: "with_genres=27&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31" },
   { title: "Terror dos anos 80:", params: "with_genres=27&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31" },
   { title: "Terror dos anos 90:", params: "with_genres=27&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31" },
