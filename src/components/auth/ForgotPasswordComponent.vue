@@ -1,11 +1,57 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Logo from '@/components/svg/Logo.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-const stage = ref('email')
+const terrorMovies = [
+  346364, 
+  348,    
+  694,    
+  138843, 
+  214     
+]
+
+const backgroundUrl = ref('')
+const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+
+let shuffledMovies = []
+let index = 0
+
+function shuffleMovies() {
+  shuffledMovies = [...terrorMovies].sort(() => Math.random() - 0.5)
+  index = 0
+}
+
+async function loadRandomBackground() {
+  if (index >= shuffledMovies.length) {
+    shuffleMovies()
+  }
+
+  const movieId = shuffledMovies[index]
+  index++
+
+  try {
+    const response = await fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`
+    )
+    const data = await response.json()
+
+    if (data.backdrop_path) {
+      backgroundUrl.value = `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+    }
+  } catch (error) {
+    console.error("Erro ao carregar imagem:", error)
+  }
+}
+
+onMounted(() => {
+  shuffleMovies()
+  loadRandomBackground()
+})
+
+const stage = ref('email') 
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
@@ -54,7 +100,15 @@ const handlePasswordReset = () => {
 </script>
 
 <template>
-  <section class="login-container">
+  <section
+    class="login-container"
+    :style="{
+    background: `linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c), url(${backgroundUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundBlendMode: 'darken'
+  }"
+  >
     <div class="login">
       <Logo class="logo" />
 
@@ -64,12 +118,11 @@ const handlePasswordReset = () => {
 
         <form @submit.prevent="handleEmailSubmit">
           <div>
-            <label for="email">Email:</label>
+            <label>Email:</label>
             <div class="input-group">
               <span class="mdi mdi-email-outline"></span>
               <input
                 type="email"
-                id="email"
                 v-model="email"
                 required
                 placeholder="exemplo@gmail.com"
@@ -95,14 +148,12 @@ const handlePasswordReset = () => {
 
         <form @submit.prevent="handlePasswordReset">
           <div>
-            <label for="password">Nova Senha:</label>
+            <label>Nova Senha:</label>
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
                 :type="showPassword ? 'text' : 'password'"
-                id="password"
                 v-model="password"
-                required
                 placeholder="Digite sua nova senha"
               />
               <span
@@ -114,14 +165,12 @@ const handlePasswordReset = () => {
           </div>
 
           <div>
-            <label for="confirmPassword">Confirmar Senha:</label>
+            <label>Confirmar Senha:</label>
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
                 :type="showPassword ? 'text' : 'password'"
-                id="confirmPassword"
                 v-model="confirmPassword"
-                required
                 placeholder="Confirme sua nova senha"
               />
             </div>
@@ -153,27 +202,31 @@ const handlePasswordReset = () => {
   </section>
 </template>
 
+
 <style scoped lang="scss">
 .login-container {
   height: 100vh;
   width: 100%;
-  background: linear-gradient(to right, c.$color-black-bottom, c.$color-black-bottom 50%, transparent);
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
   display: flex;
   align-items: center;
-  padding: 0;
 }
 
+
+
 .login {
-  background: c.$color-gray-bottom;
+  background: rgba(20, 20, 20, 0.8);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
+  border-radius: 12px;
   margin-left: 12%;
-  margin-top: 50px;
-  padding: 20px;
+  padding: 60px 20px;
   width: 420px;
-  min-height: 480px;
-  box-shadow: 0 8px 32px c.$color-black-bottom;
-  color: c.$color-white-text;
+  height: 550px;
+  box-shadow: 0 8px 32px #000;
+  color: #fff;
+  margin-top: 20px;
   text-align: center;
 }
 

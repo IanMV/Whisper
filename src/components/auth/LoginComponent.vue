@@ -1,31 +1,81 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import Logo from '@/components/svg/Logo.vue';
-import { useAuthStore } from '@/stores/auth';
+import Logo from '@/components/svg/Logo.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
-const togglePassword = () => {
-  showPassword.value = !showPassword.value
+const terrorMovies = [
+  346364,  
+  348,     
+  694,     
+  138843,  
+  214,     
+]
+
+const backgroundUrl = ref('')
+const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+
+let shuffledMovies = []
+let index = 0
+
+function shuffleMovies() {
+  shuffledMovies = [...terrorMovies].sort(() => Math.random() - 0.5)
+  index = 0
 }
 
-const handleLogin = async () => {
-  const sucesso = await authStore.login(email.value, password.value)
-  if (!sucesso) {
-    alert('Email ou senha incorretos!')
+async function loadRandomBackground() {
+  if (index >= shuffledMovies.length) {
+    shuffleMovies()
+  }
+
+  const movieId = shuffledMovies[index]
+  index++
+
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`
+
+  try {
+    const response = await fetch(url)
+    const data = await response.json()
+
+    if (data.backdrop_path) {
+      backgroundUrl.value = `https://image.tmdb.org/t/p/original${data.backdrop_path}`
+    }
+  } catch (error) {
+    console.error("Erro ao carregar imagem:", error)
   }
 }
 
 
+onMounted(() => {
+  shuffleMovies()
+  loadRandomBackground()
+  setInterval(loadRandomBackground, 8000)
+})
+
+const togglePassword = () => (showPassword.value = !showPassword.value)
+
+const handleLogin = async () => {
+  const sucesso = await authStore.login(email.value, password.value)
+  if (!sucesso) alert('Email ou senha incorretos!')
+}
 </script>
 
 <template>
-  <section class="login-container">
-    <div class="login">
+  <section
+    class="login-container"
+    :style="{
+    background: `linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c), url(${backgroundUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundBlendMode: 'darken'
+  }"
+  >
+    <div class="login fade">
       <Logo class="logo" />
       <h1>Bem-vindo de Volta</h1>
       <p>Entre na sua conta para melhorar sua experiência</p>
@@ -49,6 +99,7 @@ const handleLogin = async () => {
           <label for="password">Senha:</label>
           <div class="input-group">
             <span class="mdi mdi-lock-outline"></span>
+
             <input
               :type="showPassword ? 'text' : 'password'"
               id="password"
@@ -56,6 +107,7 @@ const handleLogin = async () => {
               required
               placeholder="Digite sua senha"
             />
+
             <span
               :class="showPassword ? 'mdi mdi-eye-outline' : 'mdi mdi-eye-off-outline'"
               class="toggle-password"
@@ -65,7 +117,10 @@ const handleLogin = async () => {
         </div>
 
         <div class="options">
-          <span @click="authStore.authView = 'forgotPassword'" class="forgot-password">
+          <span
+            @click="authStore.authView = 'forgotPassword'"
+            class="forgot-password"
+          >
             Esqueci minha senha
           </span>
         </div>
@@ -73,10 +128,14 @@ const handleLogin = async () => {
         <button type="submit">Entrar</button>
 
         <div class="create-account">
-          <p>Não tem uma conta? <span @click="authStore.authView = 'register'" class="create-link">
-            Criar conta
-          </span></p>
-          
+          <p>
+            Não tem uma conta?
+            <span
+              @click="authStore.authView = 'register'"
+              class="create-link"
+              >Criar conta</span
+            >
+          </p>
         </div>
       </form>
     </div>
@@ -85,29 +144,44 @@ const handleLogin = async () => {
 
 <style scoped lang="scss">
 .login-container {
+  animation: fadeBg 0.4s ease-in-out;
+}
+
+@keyframes fadeBg {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-container {
   height: 100vh;
   width: 100%;
-  background: linear-gradient(to right, c.$color-black-bottom, c.$color-black-bottom 50%, transparent);
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: darken;
   display: flex;
   align-items: center;
-  padding: 0;
 }
 
 .login {
-  background: c.$color-gray-bottom;
+  background: rgba(20, 20, 20, 0.8);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-left: 12%;
   padding: 20px;
   width: 420px;
   height: 550px;
-  box-shadow: 0 8px 32px c.$color-black-bottom;
-  color: c.$color-white-text;
+  box-shadow: 0 8px 32px #000;
+  color: #fff;
+  margin-top: 20px;
 }
 
 .logo {
   display: block;
-  margin: 20px auto 20px;
+  margin: 20px auto;
   width: 100px;
 }
 
