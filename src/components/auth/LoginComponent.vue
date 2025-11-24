@@ -82,7 +82,6 @@ const handleLogin = async () => {
 
       <form @submit.prevent="handleLogin">
         <div>
-          <label for="email">Email:</label>
           <div class="input-group">
             <span class="mdi mdi-email-outline"></span>
             <input
@@ -96,7 +95,6 @@ const handleLogin = async () => {
         </div>
 
         <div>
-          <label for="password">Senha:</label>
           <div class="input-group">
             <span class="mdi mdi-lock-outline"></span>
 
@@ -144,19 +142,6 @@ const handleLogin = async () => {
 
 <style scoped lang="scss">
 .login-container {
-  animation: fadeBg 0.4s ease-in-out;
-}
-
-@keyframes fadeBg {
-  from {
-    opacity: 0.3;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.login-container {
   height: 100vh;
   width: 100%;
   background-size: cover;
@@ -167,15 +152,14 @@ const handleLogin = async () => {
 }
 
 .login {
-  background: rgba(20, 20, 20, 0.8);
+  background: c.$color-black-blur;
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-left: 12%;
   padding: 20px;
   width: 420px;
   height: 550px;
-  box-shadow: 0 8px 32px #000;
-  color: #fff;
+  color: c.$color-white-text;
   margin-top: 20px;
 }
 
@@ -187,28 +171,20 @@ const handleLogin = async () => {
 
 h1 {
   text-align: center;
-  margin-bottom: 0px;
   font-weight: bold;
-  font-size: 2rem;
-    color: c.$color-red-detail;
+  font-size: 2.5rem;
+    color: c.$color-red-hover;
 }
 
 p {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 25px;
   color: c.$color-gray-text;
 }
 
 form div {
   margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  font-size: 1.1rem;
 }
 
 .input-group {
@@ -228,17 +204,17 @@ label {
   width: 100%;
   height: 40px;
   padding: 10px 40px 10px 35px;
-  border-radius: 6px;
+  border-radius: 12px;
   border: 1px solid c.$color-gray-text;
   background-color: transparent;
   color: c.$color-white-text;
   outline: none;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .input-group input:focus {
-  border-color: c.$color-red-detail;
-    box-shadow: c.$color-red-hover 0px 0px 8px;
+  border-color: c.$color-red-hover;
+  box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
 .input-group span.toggle-password {
@@ -247,11 +223,11 @@ label {
   cursor: pointer;
   color: c.$color-gray-text;
   font-size: 1.2rem;
-  transition: color 0.3s;
+  transition: 0.4s all;
 }
 
 .toggle-password:hover {
-  color: c.$color-red-detail;
+  color: c.$color-red-hover;
 }
 
 .options {
@@ -262,10 +238,10 @@ label {
 }
 
 .forgot-password {
-  font-size: 0.85rem;
-  color: c.$color-red-detail;
+  font-size: 0.9rem;
+  color: c.$color-red-hover;
   text-decoration: none;
-  transition: 0.3s;
+  transition: 0.4s all;
   cursor: pointer;
 }
 
@@ -278,18 +254,19 @@ label {
 button {
   width: 100%;
   padding: 12px;
-  background-color: c.$color-red-detail;
-  color: white;
+  background-color: c.$color-red-hover;
+  color: c.$color-white-text;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s;
 }
 
 button:hover {
-  background-color: c.$color-red-detail;
+  background-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
+  transform: scale(1.05);
 }
 
 .create-account {
@@ -306,11 +283,13 @@ button:hover {
 
 .create-link {
   display: inline-block;
-  margin-top: 5px;
-  color: c.$color-red-detail;
-  font-weight: 500;
+  margin-top: 10px;
+  color: c.$color-red-hover;
+  font-weight: bold;
   text-decoration: none;
-  transition: 0.3s;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.4s all;
 }
 
 .create-link:hover {

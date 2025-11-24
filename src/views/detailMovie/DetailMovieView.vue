@@ -251,7 +251,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 
 .poster {
   width: 230px;
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .hero-right {
@@ -259,14 +259,14 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: 500;
+  font-size: 3.5rem;
+  font-weight: bold;
 }
 
 .year {
   font-weight: normal;
   color: c.$color-red-hover;
-  font-size: 1.3rem;
+  font-size: 2rem;
 }
 
 .meta {
@@ -292,7 +292,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .overview {
   margin-bottom: 20px;
   line-height: 1.5;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: c.$color-white-text;
 }
 
@@ -312,15 +312,15 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .btn {
   padding: 7px 15px;
   border-radius: 12px;
-  border: none;
+  border: 1px solid c.$color-red-hover;
   cursor: pointer;
   font-size: 1.5rem;
-  transition: all 0.4s ease;
+  transition: all 0.4s;
 }
 
 .btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 10px c.$color-red-hover;
+  box-shadow: 0 0px 8px c.$color-red-hover;
   background-color: c.$color-red-hover;
   color: c.$color-white-text;
 }
@@ -336,14 +336,13 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   background: transparent;
   border: 1px solid c.$color-red-hover;
   color: c.$color-red-hover;
-  transition: all 0.6s ease;
+  transition: all 0.4;
 }
 
 .btn-list.active,
 .btn-like.active,
 .btn-dislike.active {
   background: c.$color-red-hover;
-  border: none;
   color: c.$color-white-text;
 }
 
@@ -377,7 +376,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   color: c.$color-white-text;
   border: 1px solid c.$color-white-text;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
 }
 
@@ -398,8 +397,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 
 .carousel {
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   gap: 12px;
   padding: 10px 0px;
   width: 80%;
@@ -413,31 +411,26 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   background: c.$color-black-bottom;
   border-radius: 12px;
   padding: 0 0 10px 0;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  transition: 0.4s all;
 
   &:hover {
     transform: translateY(-4px) scale(1.02);
     background: c.$color-red-dark;
-    box-shadow: c.$color-red-hover 0px 0px 12px;
-  }
-
-  &:active {
-    transform: scale(0.97);
-    box-shadow: 0 4px 10px c.$color-red-hover;
+    box-shadow: c.$color-red-hover 0px 0px 8px;
   }
 }
 
 .actor-thumb img {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   object-fit: cover;
 }
 
 .actor-info h3 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   margin: 4px 0 0;
   color: c.$color-white-text;
-  transition: 0.3s ease;
+  transition: 0.4s ease;
 }
 
 .actor-info p {
@@ -468,7 +461,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 }
 
 .carousel-btn span {
-  transition: color 0.3s ease;
+  transition: 0.4s all;
 }
 
 .carousel-btn span:hover {
@@ -506,14 +499,14 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   color: c.$color-white-text;
   border: none;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
   z-index: 10;
 }
 
 .image-modal-nav span {
   font-size: 3rem;
-  transition: color 0.3s ease;
+  transition: 0.4s all;
 }
 
 .image-modal-nav span:hover {
@@ -550,9 +543,9 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .gallery-main-img {
   width: auto;
   height: 400px;
-  border-radius: 16px;
+  border-radius: 12px;
   object-fit: cover;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition: 0.4s all;
 }
 
 
@@ -572,12 +565,12 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   background: transparent;
   color: c.$color-white-text;
   font-size: 32px;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .gallery-arrow:hover {
@@ -599,7 +592,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 
 .thumbs::-webkit-scrollbar-thumb {
   background: c.$color-red-hover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .thumb {
@@ -609,9 +602,8 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.28s ease, outline 0.28s ease;
+  transition: 0.4s all;
   position: relative;
-
   background: c.$color-red-dark;
   backdrop-filter: blur(6px);
   border: 1px solid c.$color-red-hover;
@@ -624,13 +616,13 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 }
 
 .thumb:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .thumb.active {
   outline: 3px solid c.$color-red-hover;
-  transform: scale(1.1);
-  box-shadow: 0 0 18px c.$color-red-hover;
+  transform: scale(1.05);
+  box-shadow: 0 0 8px c.$color-red-hover;
 }
 
 .movie-details {
@@ -642,7 +634,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 25px;
   margin: 40px 8vw;
-  border-radius: 14px;
+  border-radius: 12px;
   backdrop-filter: blur(8px);
 }
 
@@ -653,8 +645,8 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   padding: 15px;
   border: 1px solid c.$color-gray-bottom;
   border-left: 3px solid c.$color-red-hover;
-  border-radius: 8px;
-  transition: 0.3s ease;
+  border-radius: 12px;
+  transition: 0.4s all;
 }
 
 .detail-item:hover {
@@ -662,7 +654,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   background: c.$color-red-dark;
   border: 1px solid c.$color-red-hover;
   border-left: 5px solid c.$color-red-hover;
-  box-shadow: c.$color-red-hover 0px 0px 12px;
+  box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
 .detail-item.full {
@@ -731,13 +723,13 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   flex-shrink: 0;
   width: 120px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: 0.4s all;
 }
 
 .thumb:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
@@ -770,7 +762,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .similar-track {
   display: flex;
   gap: 14px;
-  overflow-x: hidden  ;
+  overflow: hidden;
   scroll-behavior: smooth;
   padding-bottom: 10px;
   width: 80%;
@@ -781,17 +773,17 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
   min-width: 150px;
   cursor: pointer;
   text-align: center;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .similar-item img {
   width: 150px;
   height: 220px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .similar-item:hover {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 </style>

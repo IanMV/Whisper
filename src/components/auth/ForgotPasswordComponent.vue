@@ -118,7 +118,6 @@ const handlePasswordReset = () => {
 
         <form @submit.prevent="handleEmailSubmit">
           <div>
-            <label>Email:</label>
             <div class="input-group">
               <span class="mdi mdi-email-outline"></span>
               <input
@@ -148,7 +147,6 @@ const handlePasswordReset = () => {
 
         <form @submit.prevent="handlePasswordReset">
           <div>
-            <label>Nova Senha:</label>
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
@@ -165,7 +163,6 @@ const handlePasswordReset = () => {
           </div>
 
           <div>
-            <label>Confirmar Senha:</label>
             <div class="input-group">
               <span class="mdi mdi-lock-outline"></span>
               <input
@@ -214,18 +211,15 @@ const handlePasswordReset = () => {
   align-items: center;
 }
 
-
-
 .login {
-  background: rgba(20, 20, 20, 0.8);
+  background: c.$color-black-blur;
   backdrop-filter: blur(10px);
   border-radius: 12px;
   margin-left: 12%;
   padding: 60px 20px;
   width: 420px;
   height: 550px;
-  box-shadow: 0 8px 32px #000;
-  color: #fff;
+  color: c.$color-white-text;
   margin-top: 20px;
   text-align: center;
 }
@@ -237,14 +231,14 @@ const handlePasswordReset = () => {
 }
 
 h1 {
-  margin-bottom: 0;
+  margin-bottom: 5px;
   font-weight: bold;
-  font-size: 2rem;
-  color: c.$color-red-detail;
+  font-size: 2.5rem;
+  color: c.$color-red-hover;
 }
 
 p {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 25px;
   color: c.$color-gray-text;
 }
@@ -265,13 +259,6 @@ p {
 form div {
   margin-bottom: 20px;
   text-align: left;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  font-size: 1rem;
 }
 
 .input-group {
@@ -298,41 +285,42 @@ label {
 
 .input-group span.mdi-eye-outline:hover,
 .input-group span.mdi-eye-off-outline:hover {
-  color: c.$color-red-detail;
+  color: c.$color-red-hover;
 }
 
 .input-group input {
   width: 100%;
   height: 40px;
   padding: 10px 40px 10px 35px;
-  border-radius: 6px;
+  border-radius: 12px;
   border: 1px solid c.$color-gray-text;
   background-color: transparent;
   color: c.$color-white-text;
   outline: none;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .input-group input:focus {
-  border-color: c.$color-red-detail;
+  border-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
 button {
   width: 100%;
   padding: 12px;
-  background-color: c.$color-red-detail;
+  background-color: c.$color-red-hover;
   color: c.$color-white-text;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s;
 }
 
 button:hover {
-  background-color: c.$color-red-detail;
+  background-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
+  transform: scale(1.05);
 }
 
 .create-account {
@@ -342,10 +330,10 @@ button:hover {
 
 .create-link {
   display: inline-block;
-  color: c.$color-red-detail;
-  font-weight: 500;
+  color: c.$color-red-hover;
+  font-weight: bold;
   text-decoration: none;
-  transition: 0.3s;
+  transition: 0.4s all;
   cursor: pointer;
 }
 

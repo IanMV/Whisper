@@ -47,7 +47,7 @@ export const useAuthStore = defineStore("authStore", () => {
   function login(email, password) {
     const foundUser = users.value.find(u => u.email === email && u.password === password);
     if (foundUser) {
-      currentUser.value = { ...foundUser }; 
+      currentUser.value = { ...foundUser };
       logado.value = true;
       saveAuthState();
       return true;
@@ -87,6 +87,26 @@ export const useAuthStore = defineStore("authStore", () => {
     router.push("/login");
   }
 
+  function forgotPassword(email) {
+    const found = users.value.find(u => u.email === email);
+    return !!found; 
+  }
+
+  function resetPassword(email, newPassword) {
+    const user = users.value.find(u => u.email === email);
+    if (!user) return false;
+
+    user.password = newPassword;
+
+    if (currentUser.value && currentUser.value.email === email) {
+      currentUser.value.password = newPassword;
+    }
+
+    saveUsers();
+    saveAuthState();
+    return true;
+  }
+
   return {
     users,
     currentUser,
@@ -95,6 +115,8 @@ export const useAuthStore = defineStore("authStore", () => {
     login,
     register,
     logout,
-    saveUsers
+    saveUsers,
+    forgotPassword,
+    resetPassword   
   };
 });

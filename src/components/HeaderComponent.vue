@@ -170,7 +170,6 @@ onBeforeUnmount(() => {
                         ? new Date(result.release_date).getFullYear()
                         : 'Ano N/A' }}
                   </p>
-                  <small>Filme</small>
                 </div>
               </div>
             </div>
@@ -192,14 +191,14 @@ onBeforeUnmount(() => {
   top: 100%;
   left: 0;
   width: 400px;
-  background-color: #111;
-  border: 1px solid #ff0000;
+  background-color: c.$color-black-blur;
+  border: 1px solid c.$color-red-hover;
   border-top: none;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 12px 12px;
   max-height: 300px;
   overflow-y: auto;
   z-index: 10000;
-  box-shadow: 0 4px 8px #111;
+  box-shadow: 0 0 8px c.$color-red-hover;
 }
 
 .result-item {
@@ -207,13 +206,13 @@ onBeforeUnmount(() => {
   align-items: center;
   padding: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid #333;
+  transition: 0.4s all;
+  border-bottom: 1px solid c.$color-gray-bottom;
 }
 
 .result-item:hover,
 .result-item.selected {
-  background-color: rgba(255, 0, 0, 0.1);
+  background-color: c.$color-red-dark;
 }
 
 .result-item img {
@@ -221,25 +220,25 @@ onBeforeUnmount(() => {
   height: 75px;
   object-fit: cover;
   margin-right: 10px;
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .result-info h4 {
   margin: 0;
   font-size: 1rem;
-  color: #fff;
+  color: c.$color-white-text;
 }
 
 .result-info p {
   margin: 0;
   font-size: 0.8rem;
-  color: #ff0000;
+  color: c.$color-red-hover;
 }
 
 .loading {
   padding: 10px;
   text-align: center;
-  color: #fff;
+  color: c.$color-white-text;
 }
 
 header {
@@ -251,7 +250,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: 0.4s all;
   z-index: 9999;
 }
 
@@ -279,24 +278,24 @@ nav ul {
 
 nav ul li {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s;
 }
 
 nav ul li:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 nav ul li a {
-  font-size: 1.03rem;
+  font-size: 1.1rem;
   text-decoration: none;
   font-weight: normal;
-  color: #fff;
+  color: c.$color-white-text;
   transition: all 0.3s ease;
 }
 
 nav ul li:hover a {
-  text-shadow: #ff0000 0 0 3px;
-  color: #ff0000;
+  text-shadow: c.$color-red-hover 0 0 3px;
+  color: c.$color-red-hover;
 }
 
 .header-right {
@@ -318,40 +317,34 @@ nav ul li:hover a {
   position: absolute;
   left: 10px;
   z-index: 2;
-  color: #fff;
+  color: c.$color-white-text;
+  transition: 0.4s all;
 }
 
 .search-container .mdi-magnify:hover {
   transform: scale(1.2);
-  color: #ff0000;
+  color: c.$color-red-hover;
 }
 
 .search-input {
-  border-color: #ff0000;
+  border-color: c.$color-red-hover;
   border-style: solid;
   padding: 8px 12px 8px 38px;
   font-size: 1rem;
   border-radius: 20px;
-  background-color: #111;
-  color: #fff;
+  background-color: c.$color-black-blur;
+  color: c.$color-white-text;
   outline: none;
   width: 0;
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: all 0.4s;
 }
 
 .search-input.active {
   width: 400px;
   opacity: 1;
-  box-shadow: black 0 0 8px;
-  color: #ff0000;
+  box-shadow: c.$color-red-hover 0 0 8px;
+  color: c.$color-gray-text;
 }
 
-.search-input.active ~ .mdi-magnify {
-  color: c.$color-red-hover; 
-}
-
-small {
-  color: #fff;
-}
 </style>

@@ -88,13 +88,14 @@ function scroll(refObj, dir = 1, step = 360) {
 
 function goAuth(view) {
   authStore.authView = view;
-  router.push("/login");
+  router.push("/auth");
 }
+
 </script>
 
 <template>
     <section v-if="!authStore.logado" class="first-page" :style="{
-    background: `linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c), url(${backgroundUrl})`,
+    background: ` url(${backgroundUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundBlendMode: 'darken'
@@ -111,134 +112,158 @@ function goAuth(view) {
     <section v-else>
       <div v-if="loading" class="info">Carregando listas...</div>
 
-      <div v-if="!loading && listMyList.length" class="section-block">
+      <div class="lists">
+        <div v-if="!loading && listMyList.length" class="section-block">
         <h2 class="section-title">Minha Lista</h2>
         <div class="carousel-wrapper">
-          <button class="nav-btn left" @click="scroll(refMy, -1)">‹</button>
+          <button class="nav-btn left" @click="scroll(refMy, -1)"><span class="mdi mdi-chevron-left"></span></button>
           <div class="carousel" ref="refMy">
             <article v-for="m in listMyList" :key="m.id + m.type" class="movie-item" @click="goTo(m)">
               <img :src="poster(m.poster_path)" :alt="m.title" />
-              <p class="movie-title">{{ m.title }}</p>
             </article>
           </div>
-          <button class="nav-btn right" @click="scroll(refMy, 1)">›</button>
+          <button class="nav-btn right" @click="scroll(refMy, 1)"><span class="mdi mdi-chevron-right"></span></button>
         </div>
       </div>
 
       <div v-if="!loading && listLiked.length" class="section-block">
         <h2 class="section-title">Curtidos</h2>
         <div class="carousel-wrapper">
-          <button class="nav-btn left" @click="scroll(refLiked, -1)">‹</button>
+          <button class="nav-btn left" @click="scroll(refLiked, -1)"><span class="mdi mdi-chevron-left"></span></button>
           <div class="carousel" ref="refLiked">
             <article v-for="m in listLiked" :key="m.id + m.type" class="movie-item" @click="goTo(m)">
               <img :src="poster(m.poster_path)" :alt="m.title" />
-              <p class="movie-title">{{ m.title }}</p>
             </article>
           </div>
-          <button class="nav-btn right" @click="scroll(refLiked, 1)">›</button>
+          <button class="nav-btn right" @click="scroll(refLiked, 1)"><span class="mdi mdi-chevron-right"></span></button>
         </div>
       </div>
 
       <div v-if="!loading && listDisliked.length" class="section-block">
         <h2 class="section-title">Descurtidos</h2>
         <div class="carousel-wrapper">
-          <button class="nav-btn left" @click="scroll(refDisliked, -1)">‹</button>
+          <button class="nav-btn left" @click="scroll(refDisliked, -1)"><span class="mdi mdi-chevron-left"></span></button>
           <div class="carousel" ref="refDisliked">
             <article v-for="m in listDisliked" :key="m.id + m.type" class="movie-item" @click="goTo(m)">
               <img :src="poster(m.poster_path)" :alt="m.title" />
-              <p class="movie-title">{{ m.title }}</p>
             </article>
           </div>
-          <button class="nav-btn right" @click="scroll(refDisliked, 1)">›</button>
+          <button class="nav-btn right" @click="scroll(refDisliked, 1)"><span class="mdi mdi-chevron-right"></span></button>
         </div>
       </div>
+      </div>
 
-      <div v-if="!loading && !listMyList.length && !listLiked.length && !listDisliked.length" class="info">
-        Nenhum item encontrado — adicione filmes ou séries às suas listas.
+      <div v-if="!loading && !listMyList.length && !listLiked.length && !listDisliked.length" class="info" :style="{
+        background: ` url(${backgroundUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundBlendMode: 'darken'
+      }">
+        <div class="add">
+          <h1>Nenhum item encontrado</h1>
+        <p> adicione filmes ou séries às suas listas.</p>
+        <button @click="router.push('/moviePage')" class="movies-btn">Ver Filmes</button>
+        <button @click="router.push('/highlight')" class="highlight-btn">Ver detaques</button>
+        </div>
       </div>
     </section>
 </template>
 
 <style scoped lang="scss">
-.first-page {
+.first-page, .info {
   width: 100%;
-  padding: 10% 20px;
-  background: #0d0d0d;
-  color: #fff;
-  color: #aaa;
-  text-align: center;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: c.$color-white-text;
+  text-align: center;
 }
 
-.login {
-  background: rgba(20, 20, 20, 0.8);
+.first-page::after, .info::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), c.$color-black-bottom);
+}
+
+.login, .add {
+  position: relative;
+  z-index: 10;
+  background: c.$color-black-blur;
   backdrop-filter: blur(10px);
   border-radius: 12px;
-  margin-left: 12%;
-  padding: 20px;
-  width: 420px;
-  height: 550px;
-  box-shadow: 0 8px 32px #000;
-  color: #fff;
-  margin-top: 20px;
-  text-align: center;
-  align-items: center;
+  padding: 40px 45px;
+  width: 450px;
+  height: auto;
 }
 
 .logo {
-  margin: 30px auto;
+  margin: 0 auto 30px auto;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 0px;
+  margin-bottom: 8px;
   font-weight: bold;
-  font-size: 2.5rem;
-    color: c.$color-red-detail;
+  font-size: 3.5rem;
+  color: c.$color-red-hover;
 }
 
 p {
   text-align: center;
-  font-size: 0.9rem;
-  margin-bottom: 20px;
-  margin-top: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 28px;
   color: c.$color-gray-text;
 }
 
-.login-btn {
+.login-btn, .movies-btn {
   background: c.$color-red-hover;
-  padding: 12px 30px;
-  font-size: 1.1rem;
-  border: none;
+  padding: 14px 32px;
+  font-size: 1.2rem;
+  border: 2px solid c.$color-red-hover;
   color: c.$color-white-text;
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.4s all;
+  transition: 0.4s ease;
   margin-right: 10px;
 }
 
-.create-btn {
+.login-btn:hover, .movies-btn:hover {
+  transform: scale(1.05);
+  background: c.$color-red-hover;
+  color: c.$color-white-text;
+  box-shadow: c.$color-red-hover 0px 0px 8px;
+}
+
+.create-btn, .highlight-btn {
   background: transparent;
   color: c.$color-red-hover;
   border: 2px solid c.$color-red-hover;
-  padding: 12px 30px;
-  font-size: 1.1rem;
+  padding: 14px 32px;
+  font-size: 1.2rem;
   border-radius: 12px;
   font-weight: bold;
+  transition: 0.4s ease;
 }
 
+.create-btn:hover, .highlight-btn:hover {
+  transform: scale(1.05);
+  background: c.$color-red-hover;
+  color: c.$color-white-text;
+  box-shadow: c.$color-red-hover 0px 0px 8px;
+}
 
-
-.section-block {
-  margin-bottom: 36px;
+.lists {
+  margin-top: 150px;
 }
 
 .section-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 14px;
-  color: #fff;
+  font-size: 2rem;
+  margin: 80px 50px 20px 50px;
+  color: c.$color-white-text;
+  border-bottom: 2px solid c.$color-white-text;
 }
 
 .carousel-wrapper {
@@ -249,135 +274,55 @@ p {
 
 .carousel {
   display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding: 12px 0;
-  width: 100%;
-  scroll-behavior: smooth;
-  position: relative;
-}
-
-/* Fade nas extremidades para efeito “cinema” */
-.carousel-wrapper::before,
-.carousel-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.carousel-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, #0d0d0d 0%, transparent 100%);
-}
-
-.carousel-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, #0d0d0d 0%, transparent 100%);
-}
-
-/* Cards */
-.movie-item {
-  position: relative;
-  min-width: 160px;
-  max-width: 160px;
-  cursor: pointer;
-  border-radius: 12px;
   overflow: hidden;
-  transition: 0.3s transform, 0.3s box-shadow;
+  gap: 12px;
+  padding: 10px 0px;
+  margin-left: 10%;
+  width: 80%;
+}
+
+.movie-item {
+  min-width: 150px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.4s all;
 }
 
 .movie-item:hover {
-  transform: translateY(-10px) scale(1.08);
-  z-index: 10;
+  transform: scale(1.05);
 }
 
 .movie-item img {
-  width: 160px;
-  height: 240px;
+  width: 150px;
+  height: 220px;
   object-fit: cover;
-  display: block;
-  transition: 0.3s all;
   border-radius: 12px;
 }
 
-/* Overlay com gradiente e título flutuante */
-.movie-item .overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.85));
-  display: flex;
-  align-items: flex-end;
-  padding: 8px;
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  box-sizing: border-box;
-  transition: 0.3s all;
-}
-
-/* Botão de play flutuante */
-.movie-item .play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: rgba(255,0,0,0.85);
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  color: #fff;
-  cursor: pointer;
-  transition: 0.3s all;
-}
-
-.movie-item:hover .play-btn {
-  transform: translate(-50%, -50%) scale(1);
-}
-
 .nav-btn {
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  border: none;
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 10px;
+  top: 40%;
+  background: transparent;
+  border: none;
+  font-size: 3rem;
+  padding: 10px 15px;
   cursor: pointer;
-  border-radius: 999px;
-  font-size: 24px;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.3s all;
-  z-index: 20;
+  color: c.$color-white-text;
+  z-index: 2;
+  border-radius: 12px;
+  transition: 0.4s all;
 }
 
 .nav-btn:hover {
-  background: rgba(255,0,0,0.85);
-  transform: translateY(-50%) scale(1.1);
+  color: c.$color-red-hover;
 }
 
 .nav-btn.left {
-  left: -12px;
+  left: 50px;
 }
 
 .nav-btn.right {
-  right: -12px;
+  right: 50px;
 }
+
 </style>
-
-

@@ -176,6 +176,7 @@ const saveCropped = async () => {
 </template>
 
 <style scoped lang="scss">
+
 input:disabled,
 textarea:disabled {
   cursor: not-allowed;
@@ -187,13 +188,13 @@ textarea:disabled {
 }
 
 .btn-salvar {
-  background: c.$color-red-detail;
+  background: c.$color-red-hover;
   color: c.$color-white-text;
   padding: 8px 15px;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .btn-salvar:hover {
@@ -205,10 +206,10 @@ textarea:disabled {
   background: transparent;
   color: c.$color-white-text;
   padding: 8px 15px;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid c.$color-white-text;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .btn-cancelar:hover {
@@ -226,14 +227,14 @@ section {
 
 .perfil-container {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 380px 770px;
   gap: 28px;
   border-radius: 12px;
-  padding: 80px 80px;
+  padding: 20px;
   color: c.$color-white-text;
-  background: c.$color-gray-bottom;
+  background: c.$color-red-dark;
   width: 80%;
-  height: 60%;
+  height: 500px;
 }
 
 .left-card {
@@ -252,11 +253,11 @@ section {
   height: 240px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid c.$color-red-detail;
+  border: 3px solid c.$color-red-hover;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .foto-area .circle img {
@@ -266,15 +267,15 @@ section {
 }
 
 .upload-label {
-  background: c.$color-red-detail;
+  background: c.$color-red-hover;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   margin-top: 12px;
   color: c.$color-white-text;
   font-weight: 500;
   margin-left: 70px;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .upload-label:hover {
@@ -297,16 +298,16 @@ input.nome {
   border: 1px solid c.$color-gray-text;
   color: c.$color-white-text;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 12px;
   outline: none;
   text-align: center;
-  width: 300px;
+  max-width: 300px;
 }
 
 .logout {
-  color: c.$color-red-detail;
+  color: c.$color-red-hover;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .logout:hover {
@@ -336,13 +337,13 @@ input.nome {
 }
 
 .btn-editar {
-  background: c.$color-red-detail;
+  background: c.$color-red-hover;
   color: c.$color-white-text;
   padding: 8px 15px;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .btn-editar:hover {
@@ -371,13 +372,13 @@ textarea {
   border: 1px solid c.$color-gray-text;
   color: c.$color-white-text;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 12px;
   outline: none;
 }
 
 input:focus,
 textarea:focus {
-  border-color: c.$color-red-detail;
+  border-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
@@ -396,11 +397,11 @@ textarea {
 .btn-outline {
   background: transparent;
   border: 1px solid c.$color-white-text;
-  padding: 15px 150px;
-  border-radius: 8px;
+  padding: 15px 120px;
+  border-radius: 12px;
   color: c.$color-white-text;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
   width: 100%;
   font-size: 1.2rem;
 }
@@ -412,13 +413,13 @@ textarea {
 }
 
 .btn-white {
-  background: c.$color-red-detail;
+  background: c.$color-red-hover;
   color: c.$color-white-text;
-  padding: 15px 150px;
-  border-radius: 8px;
+  padding: 15px 120px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
   width: 100%;
   font-size: 1.2rem;
 }
@@ -451,7 +452,7 @@ textarea {
   height: 360px;
   margin: 0 auto;
   background: c.$color-black-bottom;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .cropper-actions {
@@ -462,13 +463,13 @@ textarea {
 }
 
 .btn.salvar {
-  background: c.$color-red-detail;
+  background: c.$color-red-hover;
   color: c.$color-white-text;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .btn.salvar:hover {
@@ -481,9 +482,9 @@ textarea {
   border: 1px solid c.$color-white-text;
   color: c.$color-white-text;
   padding: 10px 18px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .btn.cancelar:hover {

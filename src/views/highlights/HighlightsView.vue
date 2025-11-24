@@ -9,7 +9,6 @@ const API = "https://api.themoviedb.org/3";
 const KEY = "817aab6edd675cf23cb2adfd4ddfcfab";
 
 const auth = useAuthStore();
-const loading = ref(true);
 
 const heroSlides = ref([]);
 const currentSlide = ref(0);
@@ -105,7 +104,6 @@ function scrollRight(index) {
 
 onMounted(async () => {
   try {
-    loading.value = true;
 
     const heroRequests = heroTerrorMoviesIds.map(id => fetchMovie(id));
     const heroMovies = await Promise.all(heroRequests);
@@ -122,9 +120,7 @@ onMounted(async () => {
 
   } catch (e) {
     console.error(e);
-  } finally {
-    loading.value = false;
-  }
+  } 
 });
 </script>
 
@@ -145,13 +141,13 @@ onMounted(async () => {
     <div v-for="(carousel, index) in carousels" :key="index" class="carousel">
       <h2 class="carousel-title">{{ carousel.title }}</h2>
       <div class="carousel-container">
-        <button class="carousel-arrow left" @click="scrollLeft(index)">&#10094;</button>
+        <button class="carousel-arrow left" @click="scrollLeft(index)"><span class="mdi mdi-chevron-left"></span></button>
         <div class="carousel-list" ref="carouselRefs" :data-index="index">
           <div v-for="movie in carousel.movies" :key="movie.id" class="movie-card" @click="openMovie(movie.id)">
             <img :src="getPoster(movie.poster_path)" :alt="movie.title" />
           </div>
         </div>
-        <button class="carousel-arrow right" @click="scrollRight(index)">&#10095;</button>
+        <button class="carousel-arrow right" @click="scrollRight(index)"><span class="mdi mdi-chevron-right"></span></button>
       </div>
     </div>
   </div>
@@ -162,27 +158,6 @@ onMounted(async () => {
   width: 100%;
   color: c.$color-white-text;
   min-height: 100vh;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  padding: 70px 0;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid c.$color-gray-text;
-  border-top-color: c.$color-white-text;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .hero {
@@ -228,7 +203,7 @@ onMounted(async () => {
   background: c.$color-red-hover;
   padding: 12px 22px;
   font-size: 1rem;
-  border: none;
+  border: 2px solid c.$color-red-hover;
   color: c.$color-white-text;
   border-radius: 12px;
   font-weight: bold;
@@ -242,7 +217,9 @@ onMounted(async () => {
   border: 2px solid c.$color-red-hover;
   padding: 10px 20px;
   border-radius: 12px;
+  font-size: 1rem;
   font-weight: bold;
+  transition: 0.4s all;
 }
 
 .add-btn:hover,
@@ -269,8 +246,7 @@ onMounted(async () => {
 
 .carousel-container {
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   gap: 12px;
   padding: 10px 0px;
   margin-left: 10%;
@@ -279,10 +255,8 @@ onMounted(async () => {
 
 .carousel-list {
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   gap: 12px;
-  scroll-behavior: smooth;
 }
 
 .carousel-arrow {
@@ -293,9 +267,8 @@ onMounted(async () => {
   font-size: 2rem;
   padding: 10px 15px;
   cursor: pointer;
-  color: #fff;
+  color: c.$color-white-text;
   z-index: 2;
-  border-radius: 5px;
   transition: 0.4s all;
 }
 
@@ -315,18 +288,17 @@ onMounted(async () => {
   min-width: 150px;
   cursor: pointer;
   text-align: center;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .movie-card img {
   width: 150px;
   height: 220px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .movie-card:hover {
-    transform: scale(1.06);
-
+    transform: scale(1.05);
 }
 </style>

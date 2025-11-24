@@ -9,7 +9,6 @@ const API = "https://api.themoviedb.org/3";
 const KEY = "817aab6edd675cf23cb2adfd4ddfcfab";
 
 const auth = useAuthStore();
-const loading = ref(true);
 
 const heroSlides = ref([]);
 const currentSlide = ref(0);
@@ -50,30 +49,36 @@ const KEYWORDS = [
   { title: "Culto:", keyword: "cult" },
 ];
 
-
 const getPoster = (path) => path ? `https://image.tmdb.org/t/p/w500${path}` : "/noimage.jpg";
 const openMovie = (id) => router.push(`/movie/${id}`);
 const addToList = (id) => { if (!auth.token) return router.push("/auth"); toggleList(id); };
+
 const fetchMovie = async (id) => {
   const res = await axios.get(`${API}/movie/${id}?api_key=${KEY}&language=pt-BR`);
   return res.data;
 };
 
 const currentMovie = computed(() => heroSlides.value[currentSlide.value] || {});
+
 const bgHero = computed(() => ({
   backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), #0c0c0c), url(https://image.tmdb.org/t/p/original${currentMovie.value.backdrop_path})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
 }));
 
+function nextSlide() {
+  currentSlide.value = (currentSlide.value + 1) % heroSlides.value.length;
+}
 
-function nextSlide() { currentSlide.value = (currentSlide.value + 1) % heroSlides.value.length; }
-function prevSlide() { currentSlide.value = (currentSlide.value - 1 + heroSlides.value.length) % heroSlides.value.length; }
+function prevSlide() {
+  currentSlide.value = (currentSlide.value - 1 + heroSlides.value.length) % heroSlides.value.length;
+}
 
 function scrollLeft(index) {
   const el = carouselRefs.value[index];
   if (el) el.scrollBy({ left: -400, behavior: "smooth" });
 }
+
 function scrollRight(index) {
   const el = carouselRefs.value[index];
   if (el) el.scrollBy({ left: 400, behavior: "smooth" });
@@ -81,47 +86,57 @@ function scrollRight(index) {
 
 const fetchKeywordId = async (keyword) => {
   const res = await axios.get(`${API}/search/keyword?api_key=${KEY}&query=${keyword}`);
-  if (res.data.results.length > 0) return res.data.results[0].id;
-  return null;
+  return res.data.results.length ? res.data.results[0].id : null;
 };
 
 const loadKeywordCarousels = async () => {
-  const carouselsWithKeywords = [];
+  const arr = [];
+
   for (const k of KEYWORDS) {
     const id = await fetchKeywordId(k.keyword);
     if (!id) continue;
+
     const page = Math.floor(Math.random() * 5) + 1;
-    const res = await axios.get(`${API}/discover/movie?api_key=${KEY}&language=pt-BR&with_genres=27&with_keywords=${id}&page=${page}`);
-    carouselsWithKeywords.push({ title: k.title, movies: res.data.results.slice(0, 20) });
+
+    const res = await axios.get(
+      `${API}/discover/movie?api_key=${KEY}&language=pt-BR&with_genres=27&with_keywords=${id}&page=${page}`
+    );
+
+    const movies = res.data.results.filter(m => m.poster_path);
+
+    arr.push({ title: k.title, movies });
   }
-  return carouselsWithKeywords;
-}
+
+  return arr;
+};
 
 onMounted(async () => {
   try {
-    loading.value = true;
+    const fetched = await Promise.all(heroTerrorMovies.map(id => fetchMovie(id)));
+    heroSlides.value = fetched.filter(m => m.poster_path && m.backdrop_path);
 
-    heroSlides.value = await Promise.all(heroTerrorMovies.map(id => fetchMovie(id)));
-
-    const carouselRequests = THEMES.map(t => {
+    const requests = THEMES.map(t => {
       const page = Math.floor(Math.random() * 5) + 1;
       return axios.get(`${API}/discover/movie?api_key=${KEY}&language=pt-BR&${t.params}&page=${page}`);
     });
-    const responses = await Promise.all(carouselRequests);
-    carousels.value = THEMES.map((t, i) => ({ title: t.title, movies: responses[i].data.results.slice(0, 20) }));
+
+    const responses = await Promise.all(requests);
+
+    carousels.value = THEMES.map((t, i) => ({
+      title: t.title,
+      movies: responses[i].data.results.filter(m => m.poster_path).slice(0, 20),
+    }));
 
     const keywordCarousels = await loadKeywordCarousels();
     carousels.value.push(...keywordCarousels);
-
     setInterval(nextSlide, 6000);
 
   } catch (e) {
     console.error(e);
-  } finally {
-    loading.value = false;
-  }
+  } 
 });
 </script>
+
 
 <template>
   <div class="page">
@@ -157,27 +172,6 @@ onMounted(async () => {
   width: 100%;
   color: c.$color-white-text;
   min-height: 100vh;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  padding: 70px 0;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid c.$color-gray-text;
-  border-top-color: c.$color-white-text;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .hero {
@@ -223,7 +217,7 @@ onMounted(async () => {
   background: c.$color-red-hover;
   padding: 12px 22px;
   font-size: 1rem;
-  border: none;
+  border: 2px solid c.$color-red-hover;
   color: c.$color-white-text;
   border-radius: 12px;
   font-weight: bold;
@@ -237,7 +231,9 @@ onMounted(async () => {
   border: 2px solid c.$color-red-hover;
   padding: 10px 20px;
   border-radius: 12px;
+  font-size: 1rem;
   font-weight: bold;
+  transition: 0.4s all;
 }
 
 .add-btn:hover,
@@ -264,8 +260,7 @@ onMounted(async () => {
 
 .carousel-container {
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   gap: 12px;
   padding: 10px 0px;
   margin-left: 10%;
@@ -274,10 +269,8 @@ onMounted(async () => {
 
 .carousel-list {
   display: flex;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   gap: 12px;
-  scroll-behavior: smooth;
 }
 
 .carousel-arrow {
@@ -288,7 +281,7 @@ onMounted(async () => {
   font-size: 2rem;
   padding: 10px 15px;
   cursor: pointer;
-  color: #fff;
+  color: c.$color-white-text;
   z-index: 2;
   border-radius: 5px;
   transition: 0.4s all;
@@ -310,18 +303,17 @@ onMounted(async () => {
   min-width: 150px;
   cursor: pointer;
   text-align: center;
-  transition: 0.3s;
+  transition: 0.4s all;
 }
 
 .movie-card img {
   width: 150px;
   height: 220px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .movie-card:hover {
-    transform: scale(1.06);
-
+    transform: scale(1.05);
 }
 </style>
