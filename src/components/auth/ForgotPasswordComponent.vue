@@ -312,7 +312,8 @@ button {
   color: c.$color-white-text;
   border: none;
   border-radius: 12px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.4s;
 }

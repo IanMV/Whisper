@@ -197,11 +197,6 @@ textarea:disabled {
   transition: 0.4s all;
 }
 
-.btn-salvar:hover {
-  background: c.$color-red-hover;
-  box-shadow: c.$color-red-hover 0px 0px 8px;
-}
-
 .btn-cancelar {
   background: transparent;
   color: c.$color-white-text;
@@ -212,10 +207,12 @@ textarea:disabled {
   transition: 0.4s all;
 }
 
-.btn-cancelar:hover {
-  border-color: c.$color-red-hover;
-  color: c.$color-red-hover;
+button:hover {
+  background-color: c.$color-red-hover;
   box-shadow: c.$color-red-hover 0px 0px 8px;
+  transform: scale(1.05);
+  color: c.$color-white-text;
+  border-color: c.$color-red-hover;
 }
 
 section {
@@ -346,11 +343,6 @@ input.nome {
   transition: 0.4s all;
 }
 
-.btn-editar:hover {
-  background: c.$color-red-hover;
-  box-shadow: c.$color-red-hover 0px 0px 8px;
-}
-
 .panel .fields {
   display: flex;
   flex-direction: column;
@@ -406,12 +398,6 @@ textarea {
   font-size: 1.2rem;
 }
 
-.btn-outline:hover {
-  border-color: c.$color-red-hover;
-  color: c.$color-red-hover;
-  box-shadow: c.$color-red-hover 0px 0px 8px;
-}
-
 .btn-white {
   background: c.$color-red-hover;
   color: c.$color-white-text;
@@ -424,10 +410,6 @@ textarea {
   font-size: 1.2rem;
 }
 
-.btn-white:hover {
-  background: c.$color-red-hover;
-  box-shadow: c.$color-red-hover 0px 0px 8px;
-}
 
 .cropper-modal {
   position: fixed;

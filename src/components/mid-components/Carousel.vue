@@ -76,7 +76,7 @@ onMounted(async () => {
 
 .carousel-slide-info-title {
 
-  color: c.$color-white;
+  color: c.$color-white-text;
   font-size: s.$g;
   grid-row: 8 / 9;
   grid-column: 2 / 12;
@@ -84,7 +84,7 @@ onMounted(async () => {
 
 .carousel-slide-info-overview {
       font-size: s.$m2;
-    color: c.$color-white;
+    color: c.$color-white-text;
   grid-row: 10 / 12;
   grid-column: 2 / 12;
 }
