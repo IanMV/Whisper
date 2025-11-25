@@ -71,15 +71,12 @@ function scrollMovie(){
 button{
   border: none;
   background-color: transparent;
-  color: c.$color-white;
+  color: c.$color-white-text;
     grid-row: 2 / 3;
      grid-template: 1 / 2;
 
     &:last-child{
       grid-template: 3 / 4;
     }
-}
-
-.section .section-list .section-list-item {
 }
 </style>

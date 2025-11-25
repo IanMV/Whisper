@@ -1,7 +1,8 @@
+
 /* ------------------------------ */
 /* RESET CSS PADRÃO               */
 /* ------------------------------ */
-
+/* Comentado na resolução do merge da FEAT-10, ver o que afetou
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -15,7 +16,7 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-=======
+
 html,
 body,
 div,
@@ -100,8 +101,9 @@ video {
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-=======
+
 /* HTML5 display-role reset for older browsers */
+/*
 article,
 aside,
 details,
@@ -127,15 +129,40 @@ blockquote::after,
 q::before,
 q::after {
   content: '';
-=======
+
 ol,
 ul {
   list-style: none;
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
-blockquote,
-q {
-  quotes: none;
+
+html, body, h1, h2, h3, h4, h5, h6,
+p, figure, blockquote, dl, dd,
+ul, ol, li, pre {
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  min-height: 100vh;
+  background-color: #0c0c0c;
+}
+
+input, button, textarea, select {
+  font: inherit;
+  background: transparent;
+  border: none;
+  color: inherit;
+  outline: none;
+
+} */
+
+button {
+  cursor: pointer;
+}
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -148,23 +175,43 @@ q:after {
 html {
   background-color: #0c0c0c;
 }
-=======
+
   /*Faz com que o scroll se sobreponha na página */
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+table {
+  width: 100%;
+}
+
+code, pre {
+  font-family: ui-monospace, "SF Mono", "Roboto Mono", monospace;
 }
 
 
-html {
-  background-color: #000;
-  overflow-x: hidden;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-
-
-body{
-    height: 101vh;
-}
-
+/* Comentado na resolução do merge, testar o que afetou
 main {
   position: relative;
   overflow: hidden;
 }
-
+*/
