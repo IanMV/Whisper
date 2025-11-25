@@ -23,7 +23,7 @@ onMounted(() => {
 
 <template>
   <Carousel />
-  <Section title="Terror"/>
+  <Section title="Por que não inicia com clássicos?"/>
 </template>
 
 <style scoped>
