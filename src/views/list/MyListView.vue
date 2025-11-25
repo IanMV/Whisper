@@ -112,7 +112,7 @@ function goAuth(view) {
     <section v-else>
       <div v-if="loading" class="info">Carregando listas...</div>
 
-      <div class="lists">
+      <div v-if="!loading && listMyList.length || !loading && listLiked.length || !loading && listDisliked.length" class="lists">
         <div v-if="!loading && listMyList.length" class="section-block">
         <h2 class="section-title">Minha Lista</h2>
         <div class="carousel-wrapper">
@@ -124,7 +124,6 @@ function goAuth(view) {
           </div>
           <button class="nav-btn right" @click="scroll(refMy, 1)"><span class="mdi mdi-chevron-right"></span></button>
         </div>
-      </div>
 
       <div v-if="!loading && listLiked.length" class="section-block">
         <h2 class="section-title">Curtidos</h2>
@@ -150,6 +149,7 @@ function goAuth(view) {
           </div>
           <button class="nav-btn right" @click="scroll(refDisliked, 1)"><span class="mdi mdi-chevron-right"></span></button>
         </div>
+      </div>
       </div>
       </div>
 
@@ -194,7 +194,7 @@ function goAuth(view) {
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: 40px 45px;
-  width: 450px;
+  width: 500px;
   height: auto;
 }
 
@@ -206,7 +206,7 @@ h1 {
   text-align: center;
   margin-bottom: 8px;
   font-weight: bold;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   color: c.$color-red-hover;
 }
 
@@ -219,7 +219,7 @@ p {
 
 .login-btn, .movies-btn {
   background: c.$color-red-hover;
-  padding: 14px 32px;
+  padding: 14px 20px;
   font-size: 1.2rem;
   border: 2px solid c.$color-red-hover;
   color: c.$color-white-text;

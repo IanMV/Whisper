@@ -173,7 +173,7 @@ onMounted(async () => {
 }
 
 .hero-content {
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .hero h1 {

@@ -136,8 +136,14 @@ const saveCropped = async () => {
 
           <div class="fields">
             <div class="row-two">
-              <input type="text" :value="authStore.currentUser.cpf" @input="authStore.updateCPF($event.target.value)"
-                placeholder="000.000.000-00" :disabled="!isEditing" />
+              <input 
+  type="text" 
+  :value="authStore.currentUser.cpf" 
+  @input="authStore.updateCPF($event.target.value)"
+  placeholder="000.000.000-00" 
+  :disabled="!isEditing" 
+/>
+
               <input type="date" v-model="authStore.currentUser.dataNascimento" :disabled="!isEditing" />
             </div>
 
@@ -148,10 +154,10 @@ const saveCropped = async () => {
           </div>
 
           <div class="panel-footer">
-            <RouterLink to="/destaques">
+            <RouterLink to="/highlight">
               <button class="btn-outline">Destaques</button>
             </RouterLink>
-            <RouterLink to="/minha-lista">
+            <RouterLink to="/my-list">
               <button class="btn-white">Minha Lista </button>
             </RouterLink>
           </div>
@@ -224,7 +230,7 @@ section {
 
 .perfil-container {
   display: grid;
-  grid-template-columns: 380px 770px;
+  grid-template-columns: 380px 1fr;
   gap: 28px;
   border-radius: 12px;
   padding: 20px;
@@ -389,7 +395,7 @@ textarea {
 .btn-outline {
   background: transparent;
   border: 1px solid c.$color-white-text;
-  padding: 15px 120px;
+  padding: 15px 180px;
   border-radius: 12px;
   color: c.$color-white-text;
   cursor: pointer;
@@ -401,7 +407,7 @@ textarea {
 .btn-white {
   background: c.$color-red-hover;
   color: c.$color-white-text;
-  padding: 15px 120px;
+  padding: 15px 180px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
