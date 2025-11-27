@@ -1,15 +1,13 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Logo from "@/components/svg/Logo.vue";
+import { tmdbApi } from "@/services/tmdb";
 
 const authStore = useAuthStore();
 const router = useRouter();
-
-const TMDB = "817aab6edd675cf23cb2adfd4ddfcfab";
 
 const listMyList = ref([]);
 const listLiked = ref([]);
@@ -23,7 +21,7 @@ const refDisliked = ref(null);
 
 const backgroundUrl = ref('')
 const terrorMovies = [346364, 348, 694, 138843, 214]
-const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 let shuffledMovies = []
 let index = 0
 
