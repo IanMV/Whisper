@@ -15,6 +15,32 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "host": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "dotenv": "^17.2.3",
+    "husky": "^9.1.7",
+    "sass": "^1.93.3",
+    "vite": "^7.2.2",
+    "vite-svg-loader": "^5.1.0"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.13.2",
+    "cropper": "^4.1.0",
+    "pinia": "^3.0.4",
+    "swiper": "^12.0.3",
+    "vue": "^3.5.24",
+    "vue-advanced-cropper": "^2.8.9",
+    "vue-cropperjs": "^5.0.0",
+    "vue-router": "^4.6.3",
+    "vue3-carousel": "^0.17.0"
   }
 }
