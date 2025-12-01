@@ -244,6 +244,7 @@ onBeforeUnmount(() => {
 header {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   padding: 20px 40px 0 40px;
   position: fixed;
@@ -271,6 +272,7 @@ header.hidden {
 nav ul {
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-left: 40px;
   padding: 0;
@@ -301,6 +303,7 @@ nav ul li:hover a {
 .header-right {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
   position: relative;
 }
@@ -309,6 +312,7 @@ nav ul li:hover a {
   position: relative;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .search-container .mdi-magnify {

@@ -23,9 +23,10 @@ onMounted(() => {
 
 <template>
   <Carousel />
-  <Section title="Por que não inicia com clássicos?"/>
+  <Section title="Por que não inicia com clássicos?" :manual="true" />
+  <Section title="Alguns recentes" genres="with_genres=27&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31&sort_by=vote_average.asc"/>
+  <Section title="Populares" genres="with_genres=27&vote_count.gte=300&sort_by=vote_average.desc
+"/>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
