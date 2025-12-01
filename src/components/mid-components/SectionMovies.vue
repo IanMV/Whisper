@@ -1,82 +1,147 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const movies = ref([]);
 import { tmdbApi } from "@/services/tmdb";
 
 onMounted(async () => {
   const res = await tmdbApi.getPopularMovies();
   movies.value = res.results;
-  console.log(movies.value);
 });
 
 const props = defineProps({
   title: String,
-  genres: Array,
+  genres: String,
+  manual: Boolean,
 });
 
-const list = ref([])
+const carouselRefs = ref([]);
 
-function scrollMovie(){
-  console.log(list.value.scrollWidth)
-     list.scrollWidth = list.scrollWidth;
+const list = ref([{
+  title: "Porque não os clássicos?",
+  movies: ["4488", "653", "30497", "348", "948", "138843", "274", "10331", "9003", "4232", "109428", "2667", "176", "23827", "694", "565"]
+}]);
+
+const m = ref([]);
+
+onMounted(async () => {
+
+  if (props.manual) {
+    const ids = list.value[0].movies.map(Number);
+    m.value = await Promise.all(
+      ids.map((id) => tmdbApi.getMovieById(id))
+    );
+
+    return
+  } else{
+    
+   m.value = await tmdbApi.fetchMoviesByTheme(props.genres)
+   return
+  }
+});
+const openMovie = (id) => router.push(`/movie/${id}`);
+
+function scrollLeft(index) {
+  const el = carouselRefs.value[index];
+  if (el) el.scrollBy({ left: -400, behavior: "smooth" });
 }
-
-
+function scrollRight(index) {
+  const el = carouselRefs.value[index];
+  if (el) el.scrollBy({ left: 400, behavior: "smooth" });
+}
 </script>
 
 <template>
-  <section class="section">
-    <h3 class="section-title">{{ props.title }}</h3>
-    <button><</button>
-    <ul class="section-list" :ref="(e) => list = e">
-      <li class="section-list-item" v-for="movie in movies">
-        <router-link :to="{ name: 'movie', params: { id: movie.id } }">
-          <img
-            :src="`https://image.tmdb.org/t/p/w300${movie.poster_path}
-`"
-            alt=""
-          />
-        </router-link>
-      </li>
-    </ul>
-    <button @click="scrollMovie()">></button>
-  </section>
+  <div v-for="(item, index) in list" class="carousel">
+    <h2 class="carousel-title">{{ props.title }}</h2>
+    <div class="carousel-container">
+      <button class="carousel-arrow left" @click="scrollLeft(index)">
+        <span class="mdi mdi-chevron-left"></span>
+      </button>
+      <div class="carousel-list" ref="carouselRefs" :data-index="index">
+        <div v-for="movie in m" :key="movie.id" class="movie-card" @click="openMovie(movie.id)">
+          <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title" />
+
+        </div>
+      </div>
+      <button class="carousel-arrow right" @click="scrollRight(index)">
+        <span class="mdi mdi-chevron-right"></span>
+      </button>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
-
-
-.section {
-  margin: 0 20px 0 20px;
-  display: grid;
-  grid-template-columns: 10% 80% 10%;
-  grid-template-rows: 1fr 1fr;
-}
-
-.section .section-title {
-  grid-row: 1 / 2;
-  grid-column: 1 / 4;
-}
-
-.section .section-list {
-  grid-row: 2 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  gap: 30px;
-  grid-template: 2 / 3;
+.carousel {
+  margin-top: 30px;
+  padding: 0 20px;
+  position: relative;
   overflow: hidden;
 }
 
-button{
-  border: none;
-  background-color: transparent;
+.carousel-title {
+  font-size: 2rem;
+  margin: 80px 50px 20px 50px;
   color: c.$color-white-text;
-    grid-row: 2 / 3;
-     grid-template: 1 / 2;
+  border-bottom: 2px solid c.$color-white-text;
+}
 
-    &:last-child{
-      grid-template: 3 / 4;
-    }
+.carousel-container {
+  display: flex;
+  overflow: hidden;
+  gap: 12px;
+  padding: 10px 0px;
+  margin-left: 10%;
+  width: 80%;
+}
+
+.carousel-list {
+  display: flex;
+  overflow: hidden;
+  gap: 12px;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 60%;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: c.$color-white-text;
+  z-index: 2;
+  transition: 0.4s all;
+}
+
+.carousel-arrow:hover {
+  color: c.$color-red-hover;
+}
+
+.carousel-arrow.left {
+  left: 50px;
+}
+
+.carousel-arrow.right {
+  right: 50px;
+}
+
+.movie-card {
+  min-width: 150px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.4s all;
+}
+
+.movie-card img {
+  width: 150px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
 }
 </style>

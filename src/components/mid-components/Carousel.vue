@@ -6,7 +6,7 @@ import { ref, onMounted } from "vue";
 const carouselConfig = {
   itemsToShow: 1,
   wrapAround: true,
-  autoplay: 3000, // ← roda a cada 3 segundos
+  autoplay: 3000,
   pauseAutoplayOnHover: false,
 };
 
@@ -20,7 +20,7 @@ onMounted(async () => {
     method: "GET",
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NmI1ZWM5NjMyMzQ2MjY0OWYwODM0MGI3NzNlMDEwMSIsIm5iZiI6MTc2MDM2NDAwNS4xOSwic3ViIjoiNjhlZDA1ZTVlNWJjZDVmOGRiZDY5MTBiIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.bOdFJEEPm4xyguH6NLfr24XL3_0IbPeeP-GrOeYVfJ0",
+        `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
       accept: "application/json",
     },
   }).then((res) => res.json());
@@ -34,7 +34,7 @@ onMounted(async () => {
     <Slide class="carousel-slide" v-for="filme in filmes" :key="filme.id">
       <img
         class="carousel-slide-img"
-        :src="`https://image.tmdb.org/t/p/w1280${filme.backdrop_path}`"
+        :src="`https://image.tmdb.org/t/p/w1920${filme.backdrop_path}`"
         alt=""
       />
       <div class="carousel-slide-info">

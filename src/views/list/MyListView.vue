@@ -1,15 +1,11 @@
-
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import Logo from "@/components/svg/Logo.vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
-
-const TMDB = "817aab6edd675cf23cb2adfd4ddfcfab";
 
 const listMyList = ref([]);
 const listLiked = ref([]);
@@ -23,7 +19,7 @@ const refDisliked = ref(null);
 
 const backgroundUrl = ref('')
 const terrorMovies = [346364, 348, 694, 138843, 214]
-const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 let shuffledMovies = []
 let index = 0
 
@@ -32,7 +28,13 @@ const loadRandomBackground = async () => {
   if (index >= shuffledMovies.length) shuffleMovies()
   const movieId = shuffledMovies[index++]
   try {
-    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`)
+    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=pt-BR`, {
+
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+
+    })
     const data = await res.json()
     if (data.backdrop_path) backgroundUrl.value = `https://image.tmdb.org/t/p/original${data.backdrop_path}`
   } catch (e) { console.error('Erro ao carregar imagem:', e) }
@@ -53,8 +55,13 @@ async function loadItem(item) {
   const id = item.id;
   const type = item.type || "movie";
   try {
-    const res = await axios.get(`https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB}&language=pt-BR`);
-    const data = res.data;
+    const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?language=pt-BR`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    });
+   
+    const data = await res.json(); console.log(data)
     return { ...data, type, title: type === "movie" ? data.title : data.name };
   } catch {
     return null;
@@ -63,10 +70,16 @@ async function loadItem(item) {
 
 async function loadLists() {
   if (!authStore.currentUser) return;
+
   loading.value = true;
+
   const user = authStore.currentUser;
 
-  const loadArr = async arr => arr.length ? (await Promise.all(arr.map(loadItem))).filter(Boolean) : [];
+  const loadArr = async (arr) =>
+    arr.length
+      ? (await Promise.all(arr.map(loadItem))).filter(Boolean)
+      : [];
+
   listMyList.value = await loadArr(user.myList || []);
   listLiked.value = await loadArr(user.liked || []);
   listDisliked.value = await loadArr(user.disliked || []);
@@ -94,26 +107,26 @@ function goAuth(view) {
 </script>
 
 <template>
-    <section v-if="!authStore.logado" class="first-page" :style="{
+  <section v-if="!authStore.logado" class="first-page" :style="{
     background: ` url(${backgroundUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundBlendMode: 'darken'
   }">
-      <div class="login">
+    <div class="login">
       <Logo class="logo" />
-        <h1>Minha Lista</h1>
-        <p>Você precisa estar logado para ver suas listas.</p>
+      <h1>Minha Lista</h1>
+      <p>Você precisa estar logado para ver suas listas.</p>
       <button @click="goAuth('login')" class="login-btn">Login</button>
       <button @click="goAuth('register')" class="create-btn">Criar Conta</button>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <section v-else>
-      <div v-if="loading" class="info">Carregando listas...</div>
+  <section v-else>
+    <div v-if="loading" class="info">Carregando listas...</div>
 
-      <div v-if="!loading && listMyList.length || !loading && listLiked.length || !loading && listDisliked.length" class="lists">
-        <div v-if="!loading && listMyList.length" class="section-block">
+    <div class="lists">
+      <div v-if="!loading && listMyList.length" class="section-block">
         <h2 class="section-title">Minha Lista</h2>
         <div class="carousel-wrapper">
           <button class="nav-btn left" @click="scroll(refMy, -1)"><span class="mdi mdi-chevron-left"></span></button>
@@ -134,43 +147,46 @@ function goAuth(view) {
               <img :src="poster(m.poster_path)" :alt="m.title" />
             </article>
           </div>
-          <button class="nav-btn right" @click="scroll(refLiked, 1)"><span class="mdi mdi-chevron-right"></span></button>
+          <button class="nav-btn right" @click="scroll(refLiked, 1)"><span
+              class="mdi mdi-chevron-right"></span></button>
         </div>
       </div>
 
       <div v-if="!loading && listDisliked.length" class="section-block">
         <h2 class="section-title">Descurtidos</h2>
         <div class="carousel-wrapper">
-          <button class="nav-btn left" @click="scroll(refDisliked, -1)"><span class="mdi mdi-chevron-left"></span></button>
+          <button class="nav-btn left" @click="scroll(refDisliked, -1)"><span
+              class="mdi mdi-chevron-left"></span></button>
           <div class="carousel" ref="refDisliked">
             <article v-for="m in listDisliked" :key="m.id + m.type" class="movie-item" @click="goTo(m)">
               <img :src="poster(m.poster_path)" :alt="m.title" />
             </article>
           </div>
-          <button class="nav-btn right" @click="scroll(refDisliked, 1)"><span class="mdi mdi-chevron-right"></span></button>
+          <button class="nav-btn right" @click="scroll(refDisliked, 1)"><span
+              class="mdi mdi-chevron-right"></span></button>
         </div>
       </div>
-      </div>
-      </div>
+    </div>
 
-      <div v-if="!loading && !listMyList.length && !listLiked.length && !listDisliked.length" class="info" :style="{
-        background: ` url(${backgroundUrl})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundBlendMode: 'darken'
-      }">
-        <div class="add">
-          <h1>Nenhum item encontrado</h1>
+    <div v-if="!loading && !listMyList.length && !listLiked.length && !listDisliked.length" class="info" :style="{
+      background: ` url(${backgroundUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundBlendMode: 'darken'
+    }">
+      <div class="add">
+        <h1>Nenhum item encontrado</h1>
         <p> adicione filmes ou séries às suas listas.</p>
         <button @click="router.push('/moviePage')" class="movies-btn">Ver Filmes</button>
         <button @click="router.push('/highlight')" class="highlight-btn">Ver detaques</button>
-        </div>
       </div>
-    </section>
+    </div>
+  </section>
 </template>
 
 <style scoped lang="scss">
-.first-page, .info {
+.first-page,
+.info {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -180,14 +196,16 @@ function goAuth(view) {
   text-align: center;
 }
 
-.first-page::after, .info::after {
+.first-page::after,
+.info::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.5), c.$color-black-bottom);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), c.$color-black-bottom);
 }
 
-.login, .add {
+.login,
+.add {
   position: relative;
   z-index: 10;
   background: c.$color-black-blur;
@@ -217,7 +235,8 @@ p {
   color: c.$color-gray-text;
 }
 
-.login-btn, .movies-btn {
+.login-btn,
+.movies-btn {
   background: c.$color-red-hover;
   padding: 14px 20px;
   font-size: 1.2rem;
@@ -230,14 +249,16 @@ p {
   margin-right: 10px;
 }
 
-.login-btn:hover, .movies-btn:hover {
+.login-btn:hover,
+.movies-btn:hover {
   transform: scale(1.05);
   background: c.$color-red-hover;
   color: c.$color-white-text;
   box-shadow: c.$color-red-hover 0px 0px 8px;
 }
 
-.create-btn, .highlight-btn {
+.create-btn,
+.highlight-btn {
   background: transparent;
   color: c.$color-red-hover;
   border: 2px solid c.$color-red-hover;
@@ -248,7 +269,8 @@ p {
   transition: 0.4s ease;
 }
 
-.create-btn:hover, .highlight-btn:hover {
+.create-btn:hover,
+.highlight-btn:hover {
   transform: scale(1.05);
   background: c.$color-red-hover;
   color: c.$color-white-text;
@@ -324,5 +346,4 @@ p {
 .nav-btn.right {
   right: 50px;
 }
-
 </style>

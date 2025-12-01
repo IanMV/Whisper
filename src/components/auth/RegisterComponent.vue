@@ -15,7 +15,7 @@ const successMessage = ref('')
 
 const backgroundUrl = ref('')
 const terrorMovies = [346364, 348, 694, 138843, 214]
-const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 let shuffledMovies = []
 let index = 0
 
@@ -24,7 +24,11 @@ const loadRandomBackground = async () => {
   if (index >= shuffledMovies.length) shuffleMovies()
   const movieId = shuffledMovies[index++]
   try {
-    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`)
+    const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?language=pt-BR`,{
+      headers:{
+        authorization: `Bearer ${API_KEY}`
+      }
+    })
     const data = await res.json()
     if (data.backdrop_path) backgroundUrl.value = `https://image.tmdb.org/t/p/original${data.backdrop_path}`
   } catch (e) { console.error('Erro ao carregar imagem:', e) }
