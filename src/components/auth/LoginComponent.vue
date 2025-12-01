@@ -18,7 +18,7 @@ const terrorMovies = [
 ]
 
 const backgroundUrl = ref('')
-const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 let shuffledMovies = []
 let index = 0
@@ -36,10 +36,14 @@ async function loadRandomBackground() {
   const movieId = shuffledMovies[index]
   index++
 
-  const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=pt-BR`
+  const url = `https://api.themoviedb.org/3/movie/${movieId}?language=pt-BR`
 
   try {
-    const response = await fetch(url)
+    const response = await fetch(url, {
+      headers: {
+        authorization: `Bearer ${API_KEY}`
+      }
+    })
     const data = await response.json()
 
     if (data.backdrop_path) {

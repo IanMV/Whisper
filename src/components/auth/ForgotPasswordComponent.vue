@@ -14,7 +14,7 @@ const terrorMovies = [
 ]
 
 const backgroundUrl = ref('')
-const API_KEY = '817aab6edd675cf23cb2adfd4ddfcfab'
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 let shuffledMovies = []
 let index = 0

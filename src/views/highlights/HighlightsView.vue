@@ -1,12 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import axios from "axios";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
 import { toggleList } from "@/stores/list";
-
-const API = "https://api.themoviedb.org/3";
-const KEY = "817aab6edd675cf23cb2adfd4ddfcfab";
+import { tmdbApi } from "@/services/tmdb";
 
 const auth = useAuthStore();
 
@@ -19,12 +16,35 @@ const carouselRefs = ref([]);
 const heroTerrorMoviesIds = [1305825, 1561473, 1585405, 1583714, 706862];
 
 const THEMES = [
-  { title: "Terror Menos Popular:", params: "with_genres=27&sort_by=vote_average.asc" },
-  { title: "Terror dos anos 70:", params: "with_genres=27&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31&sort_by=vote_average.asc" },
-  { title: "Terror dos anos 80:", params: "with_genres=27&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31&sort_by=vote_average.asc" },
-  { title: "Terror dos anos 90:", params: "with_genres=27&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&sort_by=vote_average.asc" },
-  { title: "Terror dos anos 2000:", params: "with_genres=27&primary_release_date.gte=2000-01-01&primary_release_date.lte=2009-12-31&sort_by=vote_average.asc" },
-  { title: "Terror dos anos 2010:", params: "with_genres=27&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31&sort_by=vote_average.asc" },
+  {
+    title: "Terror Menos Popular:",
+    params: "with_genres=27&sort_by=vote_average.asc",
+  },
+  {
+    title: "Terror dos anos 70:",
+    params:
+      "with_genres=27&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31&sort_by=vote_average.asc",
+  },
+  {
+    title: "Terror dos anos 80:",
+    params:
+      "with_genres=27&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31&sort_by=vote_average.asc",
+  },
+  {
+    title: "Terror dos anos 90:",
+    params:
+      "with_genres=27&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31&sort_by=vote_average.asc",
+  },
+  {
+    title: "Terror dos anos 2000:",
+    params:
+      "with_genres=27&primary_release_date.gte=2000-01-01&primary_release_date.lte=2009-12-31&sort_by=vote_average.asc",
+  },
+  {
+    title: "Terror dos anos 2010:",
+    params:
+      "with_genres=27&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31&sort_by=vote_average.asc",
+  },
 ];
 
 const KEYWORDS = [
@@ -47,10 +67,15 @@ const KEYWORDS = [
   { title: "Culto:", keyword: "cult" },
 ];
 
-const getPoster = (path) => path ? `https://image.tmdb.org/t/p/w500${path}` : null;
+const getPoster = (path) =>
+  path ? `https://image.tmdb.org/t/p/w500${path}` : null;
 const openMovie = (id) => router.push(`/movie/${id}`);
-const addToList = (id) => { if (!auth.token) return router.push("/auth"); toggleList(id); };
+const addToList = (id) => {
+  if (!auth.token) return router.push("/my-list");
+  toggleList(id);
+};
 
+/* Modularizando requisições (movidas para tmdb.js)
 const fetchMovie = async (id) => {
   const res = await axios.get(`${API}/movie/${id}?api_key=${KEY}&language=pt-BR`);
   return res.data;
@@ -68,10 +93,10 @@ const fetchKeywordId = async (keyword) => {
   return null;
 };
 
-const loadKeywordCarousels = async () => {
+async loadKeywordCarousels (KEYWORDS) {
   const carouselsWithKeywords = [];
   for (const k of KEYWORDS) {
-    const id = await fetchKeywordId(k.keyword);
+    const id = await tmdbApi.fetchKeywordId(k.keyword);
     if (!id) continue;
     const page = Math.floor(Math.random() * 5) + 1;
     const res = await axios.get(`${API}/discover/movie?api_key=${KEY}&language=pt-BR&with_genres=27&with_keywords=${id}&sort_by=vote_average.asc&page=${page}`);
@@ -81,17 +106,19 @@ const loadKeywordCarousels = async () => {
   }
   return carouselsWithKeywords;
 };
-
+*/
 const currentMovie = computed(() => heroSlides.value[currentSlide.value] || {});
 const bgHero = computed(() => ({
   backgroundImage: currentMovie.value.backdrop_path
     ? `linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c), url(https://image.tmdb.org/t/p/original${currentMovie.value.backdrop_path})`
     : "linear-gradient(to bottom, rgba(0,0,0,0.5), #0c0c0c)",
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
+  backgroundSize: "cover",
+  backgroundPosition: "center",
 }));
 
-function nextSlide() { currentSlide.value = (currentSlide.value + 1) % heroSlides.value.length; }
+function nextSlide() {
+  currentSlide.value = (currentSlide.value + 1) % heroSlides.value.length;
+}
 
 function scrollLeft(index) {
   const el = carouselRefs.value[index];
@@ -104,23 +131,30 @@ function scrollRight(index) {
 
 onMounted(async () => {
   try {
-
-    const heroRequests = heroTerrorMoviesIds.map(id => fetchMovie(id));
+    const heroRequests = heroTerrorMoviesIds.map((id) =>
+      tmdbApi.fetchMovie(id)
+    );
     const heroMovies = await Promise.all(heroRequests);
-    heroSlides.value = heroMovies.filter(m => m.poster_path).sort((a,b) => a.vote_average - b.vote_average);
+    heroSlides.value = heroMovies
+      .filter((m) => m.poster_path)
+      .sort((a, b) => a.vote_average - b.vote_average);
 
-    const carouselRequests = THEMES.map(t => fetchMoviesByTheme(t.params));
+    const carouselRequests = THEMES.map((t) =>
+      tmdbApi.fetchMoviesByTheme(t.params)
+    );
     const themeMovies = await Promise.all(carouselRequests);
-    carousels.value = THEMES.map((t,i) => ({ title: t.title, movies: themeMovies[i] }));
+    carousels.value = THEMES.map((t, i) => ({
+      title: t.title,
+      movies: themeMovies[i],
+    }));
 
-    const keywordCarousels = await loadKeywordCarousels();
+    const keywordCarousels = await tmdbApi.loadKeywordCarousels(KEYWORDS);
     carousels.value.push(...keywordCarousels);
 
     setInterval(nextSlide, 6000);
-
   } catch (e) {
     console.error(e);
-  } 
+  }
 });
 </script>
 
@@ -128,12 +162,20 @@ onMounted(async () => {
   <div class="page">
     <section v-if="heroSlides.length" class="hero" :style="bgHero">
       <div class="hero-content">
-        <h1>{{ currentMovie.title }} <small class="year">({{ new Date(currentMovie.release_date).getFullYear()
-            }})</small></h1>
+        <h1>
+          {{ currentMovie.title }}
+          <small class="year"
+            >({{ new Date(currentMovie.release_date).getFullYear() }})</small
+          >
+        </h1>
         <p>{{ currentMovie.overview }}</p>
         <div class="hero-buttons">
-          <button @click="openMovie(currentMovie.id)" class="hero-btn">Ver detalhes</button>
-          <button @click="addToList(currentMovie.id)" class="hero-btn add-btn">Minha Lista</button>
+          <button @click="openMovie(currentMovie.id)" class="hero-btn">
+            Ver detalhes
+          </button>
+          <button @click="addToList(currentMovie.id)" class="hero-btn add-btn">
+            Minha Lista
+          </button>
         </div>
       </div>
     </section>
@@ -141,13 +183,22 @@ onMounted(async () => {
     <div v-for="(carousel, index) in carousels" :key="index" class="carousel">
       <h2 class="carousel-title">{{ carousel.title }}</h2>
       <div class="carousel-container">
-        <button class="carousel-arrow left" @click="scrollLeft(index)"><span class="mdi mdi-chevron-left"></span></button>
+        <button class="carousel-arrow left" @click="scrollLeft(index)">
+          <span class="mdi mdi-chevron-left"></span>
+        </button>
         <div class="carousel-list" ref="carouselRefs" :data-index="index">
-          <div v-for="movie in carousel.movies" :key="movie.id" class="movie-card" @click="openMovie(movie.id)">
+          <div
+            v-for="movie in carousel.movies"
+            :key="movie.id"
+            class="movie-card"
+            @click="openMovie(movie.id)"
+          >
             <img :src="getPoster(movie.poster_path)" :alt="movie.title" />
           </div>
         </div>
-        <button class="carousel-arrow right" @click="scrollRight(index)"><span class="mdi mdi-chevron-right"></span></button>
+        <button class="carousel-arrow right" @click="scrollRight(index)">
+          <span class="mdi mdi-chevron-right"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -299,6 +350,6 @@ onMounted(async () => {
 }
 
 .movie-card:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 </style>

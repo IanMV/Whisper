@@ -51,7 +51,7 @@ const KEYWORDS = [
 
 const getPoster = (path) => path ? `https://image.tmdb.org/t/p/w500${path}` : "/noimage.jpg";
 const openMovie = (id) => router.push(`/movie/${id}`);
-const addToList = (id) => { if (!auth.token) return router.push("/auth"); toggleList(id); };
+const addToList = (id) => { if (!auth.token) return router.push("/my-list"); toggleList(id); };
 
 const fetchMovie = async (id) => {
   const res = await axios.get(`${API}/movie/${id}?api_key=${KEY}&language=pt-BR`);

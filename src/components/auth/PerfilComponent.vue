@@ -190,6 +190,7 @@ textarea:disabled {
 
 .edit-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -225,6 +226,7 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   height: 100vh;
 }
 
@@ -248,6 +250,7 @@ section {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
@@ -260,6 +263,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   transition: 0.4s all;
 }
 
@@ -327,6 +331,7 @@ input.nome {
 
 .panel-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
@@ -352,6 +357,7 @@ input.nome {
 .panel .fields {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -390,6 +396,7 @@ textarea {
   margin-top: 18px;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .btn-outline {
@@ -424,6 +431,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   z-index: 3000;
 }
 
@@ -448,6 +456,7 @@ textarea {
   gap: 12px;
   margin-top: 14px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn.salvar {
