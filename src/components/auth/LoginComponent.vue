@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { RouterLink } from 'vue-router'
 import Logo from '@/components/svg/Logo.vue'
 import { useAuthStore } from '@/stores/auth'
 
