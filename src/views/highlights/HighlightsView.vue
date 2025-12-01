@@ -71,7 +71,7 @@ const getPoster = (path) =>
   path ? `https://image.tmdb.org/t/p/w500${path}` : null;
 const openMovie = (id) => router.push(`/movie/${id}`);
 const addToList = (id) => {
-  if (!auth.token) return router.push("/auth");
+  if (!auth.token) return router.push("/my-list");
   toggleList(id);
 };
 

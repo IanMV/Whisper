@@ -40,7 +40,6 @@ onMounted(async () => {
    return
   }
 });
-const openMovie = (id) => router.push(`/movie/${id}`);
 
 function scrollLeft(index) {
   const el = carouselRefs.value[index];
@@ -50,6 +49,9 @@ function scrollRight(index) {
   const el = carouselRefs.value[index];
   if (el) el.scrollBy({ left: 400, behavior: "smooth" });
 }
+
+const openMovie = (id) => router.push(`/movie/${id}`);
+
 </script>
 
 <template>
