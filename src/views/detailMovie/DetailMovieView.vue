@@ -6,7 +6,7 @@ import { toggleList, like, dislike } from "@/stores/list";
 import router from "@/router";
 
 const props = defineProps({ id: { type: [String, Number], required: true } });
-const TMDB = "817aab6edd675cf23cb2adfd4ddfcfab";
+const TMDB = import.meta.env.VITE_TMDB_API_KEY;
 
 const authStore = useAuthStore();
 const showTrailer = ref(false);
@@ -29,23 +29,67 @@ const likedCheck = computed(() => authStore.currentUser?.liked?.some(i=>i.id===m
 const dislikedCheck = computed(() => authStore.currentUser?.disliked?.some(i=>i.id===movie.value?.id && i.type==='movie'));
 
 const posterOrPlaceholder = (path, size='w300') => path ? `https://image.tmdb.org/t/p/${size}${path}` : "https://via.placeholder.com/300x450?text=Sem+Foto";
+const loadMovie = async () => {
+  try {
+    const base = `https://api.themoviedb.org/3/movie/${props.id}`;
+    const p1 = fetch(`${base}?alanguage=pt-BR`, {
+      headers: {
+        Authorization: `Bearer ${TMDB}`
+      }
+    });
+    const p2 = fetch(`${base}/credits?language=pt-BR`, {
+      headers: {
+        Authorization: `Bearer ${TMDB}`
+      }
+    });
+    const p3 = fetch(`${base}/videos?language=pt-BR`, {
+      headers: {
+        Authorization: `Bearer ${TMDB}`
+      }
+    });
+    const p4 = fetch(`${base}/images`, {
+      headers: {
+        Authorization: `Bearer ${TMDB}`
+      }
+    });
 
-const loadMovie = async ()=>{
-  try{
+    const [detailsRes, castRes, videosRes, imagesRes] = await Promise.all([p1, p2, p3, p4]);
+
+    if (!detailsRes.ok || !castRes.ok || !videosRes.ok || !imagesRes.ok) {
+      throw new Error("Erro ao buscar dados na API");
+    }
+
     const [details, castData, videosData, imagesData] = await Promise.all([
-      axios.get(`https://api.themoviedb.org/3/movie/${props.id}`, { params:{ api_key: TMDB, language:'pt-BR' }}),
-      axios.get(`https://api.themoviedb.org/3/movie/${props.id}/credits`, { params:{ api_key: TMDB, language:'pt-BR' }}),
-      axios.get(`https://api.themoviedb.org/3/movie/${props.id}/videos`, { params:{ api_key: TMDB, language:'pt-BR' }}),
-      axios.get(`https://api.themoviedb.org/3/movie/${props.id}/images`, { params:{ api_key: TMDB }}),
+      detailsRes.json(),
+      castRes.json(),
+      videosRes.json(),
+      imagesRes.json()
     ]);
-    movie.value = details.data;
-    credits.value = (castData.data.cast||[]).slice(0,14).filter(a=>a.profile_path);
-    trailerKey.value = (videosData.data.results||[]).find(v=>v.type==='Trailer' && v.site==='YouTube')?.key || null;
-    const allImages = [...(imagesData.data.backdrops||[]), ...(imagesData.data.posters||[])].filter(i=>i.file_path);
-    images.value = allImages.slice(0,10);
+
+    movie.value = details;
+
+    credits.value = (castData.cast || [])
+      .slice(0, 14)
+      .filter(a => a.profile_path);
+
+    trailerKey.value =
+      (videosData.results || []).find(
+        v => v.type === "Trailer" && v.site === "YouTube"
+      )?.key || null;
+
+    const allImages = [
+      ...(imagesData.backdrops || []),
+      ...(imagesData.posters || [])
+    ].filter(i => i.file_path);
+
+    images.value = allImages.slice(0, 10);
     mainImage.value = images.value[0];
-  }catch(e){ console.error(e); }
+
+  } catch (e) {
+    console.error(e);
+  }
 };
+
 
 const filteredSimilar = computed(() => 
   similarMovies.value.filter(m => m.genre_ids?.includes(27))
@@ -54,8 +98,12 @@ const filteredSimilar = computed(() =>
 
 const fetchSimilar = async ()=>{
   try{
-    const res = await axios.get(`https://api.themoviedb.org/3/movie/${props.id}/similar?api_key=${TMDB}&language=pt-BR&page=1`);
-    similarMovies.value = res.data.results||[];
+    const res = await fetch(`https://api.themoviedb.org/3/movie/${props.id}/similar?language=pt-BR&page=1`,{
+      headers: {
+        Authorization: `Bearer ${TMDB}` 
+      }
+    });
+    similarMovies.value = res.results||[];
   }catch(e){ console.error(e); }
 };
 

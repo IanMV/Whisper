@@ -13,11 +13,21 @@ const props = defineProps({
   genres: Array,
 });
 
+const carouselRefs = ref([]);
+
 const list = ref([{
   title: "Porque não os clássicos?",
-  movies: ["4488", "653", "4346", "30497", "348", "948", "138843", "274", "10331","19614", "9003", "4232", "109428", "2667", "176", "23827", "694", "565"]
+  movies: ["4488", "653","30497", "348", "948", "138843", "274", "10331","19614", "9003", "4232", "109428", "2667", "176", "23827", "694", "565"]
 }]);
 
+const m = ref([]);
+
+onMounted(async () => {
+  const ids = list.value[0].movies.map(Number);
+  m.value = await Promise.all(
+    ids.map((id) => tmdbApi.getMovieById(id))
+  );
+});
 const openMovie = (id) => router.push(`/movie/${id}`);
 
 function scrollLeft(index) {
@@ -31,7 +41,7 @@ function scrollRight(index) {
 </script>
 
 <template>
-  <div v-for="(item, index) in list" class="carousel">
+  <div v-for="(item, index) in list" class="carousel" >
     <h2 class="carousel-title">{{ item.title }}</h2>
     <div class="carousel-container">
       <button class="carousel-arrow left" @click="scrollLeft(index)">
@@ -39,7 +49,7 @@ function scrollRight(index) {
       </button>
       <div class="carousel-list" ref="carouselRefs" :data-index="index">
         <div
-          v-for="movie in item.movies"
+          v-for="movie in m"
           :key="movie.id"
           class="movie-card"
           @click="openMovie(movie.id)"

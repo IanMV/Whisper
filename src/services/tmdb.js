@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE = import.meta.env.VITE_TMDB_API_BASE;
 
@@ -40,24 +38,49 @@ export const tmdbApi = {
     return tmdbFetch(`movie/${id}/videos`);
   },
   async fetchKeywordId(keyword) {
-    const res = await axios.get(
-      `${API}/search/keyword?api_key=${KEY}&query=${keyword}`
-    );
-    if (res.data.results.length > 0) return res.data.results[0].id;
+    let res = await fetch(`${API_BASE}/search/keyword?query=${keyword}`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    });
+    res = await res.json();
+
+    /* const res = await axios.get(
+      `${API_BASE}/search/keyword?api_key=${API_KEY}&query=${keyword}`
+    );*/
+    if (res.results.length > 0) return res.results[0].id;
     return null;
   },
   async fetchMoviesByTheme(params) {
     const page = Math.floor(Math.random() * 5) + 1;
-    const res = await axios.get(
-      `${API}/discover/movie?api_key=${KEY}&language=pt-BR&${params}&page=${page}`
+
+    let res = await fetch(
+      `${API_BASE}/discover/movie?language=pt-BR&${params}&page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+      }
     );
-    return res.data.results.filter((movie) => movie.poster_path).slice(0, 20);
+    res = await res.json();
+
+    /*  const res = await axios.get(
+      `${API_BASE}/discover/movie?api_key=${API_KEY}&language=pt-BR&${params}&page=${page}`
+    );*/
+    return res.results.filter((movie) => movie.poster_path).slice(0, 20);
   },
   async fetchMovie(id) {
+    let res = await fetch(`${API_BASE}/movie/${id}`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    });
+    res = await res.json();
+    /*
     const res = await axios.get(
-      `${API}/movie/${id}?api_key=${KEY}&language=pt-BR`
-    );
-    return res.data;
+      `${API_BASE}/movie/${id}?api_key=${API_KEY}&language=pt-BR`
+    );*/
+    return res;
   },
   async loadKeywordCarousels(KEYWORDS) {
     const carouselsWithKeywords = [];
@@ -65,12 +88,21 @@ export const tmdbApi = {
       const id = await this.fetchKeywordId(k.keyword);
       if (!id) continue;
       const page = Math.floor(Math.random() * 5) + 1;
-      const res = await axios.get(
-        `${API}/discover/movie?api_key=${API_KEY}&language=pt-BR&with_genres=27&with_keywords=${id}&sort_by=vote_average.asc&page=${page}`
+
+      let res = await fetch(
+        `${API_BASE}/discover/movie?language=pt-BR&with_genres=27&with_keywords=${id}&sort_by=vote_average.asc&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${API_KEY}`,
+          },
+        }
       );
-      const moviesWithPoster = res.data.results
-        .filter((m) => m.poster_path)
-        .slice(0, 20);
+      res = await res.json();
+
+      /* const res = await axios.get(
+        `${API_BASE}/discover/movie?api_key=${API_KEY}&language=pt-BR&with_genres=27&with_keywords=${id}&sort_by=vote_average.asc&page=${page}`
+      );*/
+      const moviesWithPoster = res.results.filter((m) => m.poster_path).slice(0, 20);
       if (moviesWithPoster.length > 0)
         carouselsWithKeywords.push({
           title: k.title,
