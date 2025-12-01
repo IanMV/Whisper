@@ -307,7 +307,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 }
 
 .title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: bold;
 }
 
@@ -340,7 +340,7 @@ watch(()=>props.id, ()=>{ loadMovie(); fetchSimilar(); });
 .overview {
   margin-bottom: 20px;
   line-height: 1.5;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: c.$color-white-text;
 }
 
